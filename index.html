@@ -1,0 +1,1001 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" href="data:," />
+    <title>《少子女化拯救器》Baby or Bust — 少子女化政策模擬</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #14161a;
+        --bg-2: #1c1f26;
+        --panel: #23262f;
+        --panel-edge: #343947;
+        --ink: #ece9e2;
+        --ink-dim: #a7a294;
+        --ink-faint: #7c7a70;
+        --accent: #d9903f;
+        --accent-ink: #1a1206;
+        --good: #7fb069;
+        --bad: #d1603d;
+        --bar-track: #333745;
+        --fact-bg: #2a2417;
+        --fact-edge: #57492a;
+        --src-bg: #1a1d24;
+        --radius: 14px;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          color-scheme: light;
+          --bg: #e9e6df;
+          --bg-2: #f4f1ea;
+          --panel: #fdfcf8;
+          --panel-edge: #d8d2c2;
+          --ink: #23211c;
+          --ink-dim: #5d594f;
+          --ink-faint: #8a8578;
+          --accent: #b06f1e;
+          --accent-ink: #ffffff;
+          --good: #4c7a3f;
+          --bad: #b34a2a;
+          --bar-track: #ddd6c6;
+          --fact-bg: #f7efdb;
+          --fact-edge: #d9c48c;
+          --src-bg: #f0ede4;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans TC", system-ui, -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 16px 16px 48px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ---------- indicator bar ---------- */
+      .meters {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px 14px;
+        padding: 14px 14px 12px;
+        background: var(--bg-2);
+        border: 1px solid var(--panel-edge);
+        border-radius: var(--radius);
+      }
+      .meter { position: relative; }
+      .meter-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+      .meter-name { color: var(--ink-dim); font-weight: 500; letter-spacing: 0.04em; }
+      .meter-val { font-weight: 900; font-size: 16px; font-variant-numeric: tabular-nums; }
+      .meter-track {
+        height: 8px;
+        background: var(--bar-track);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .meter-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: var(--accent);
+        transition: width 0.6s ease;
+      }
+      .meter.danger .meter-fill { background: var(--bad); }
+      .meter.danger .meter-val { color: var(--bad); }
+      .delta {
+        position: absolute;
+        right: 0;
+        top: -4px;
+        font-weight: 900;
+        font-size: 15px;
+        pointer-events: none;
+        animation: floatUp 1.4s ease-out forwards;
+        font-variant-numeric: tabular-nums;
+      }
+      .delta.up { color: var(--good); }
+      .delta.down { color: var(--bad); }
+      @keyframes floatUp {
+        0% { opacity: 0; transform: translateY(6px); }
+        15% { opacity: 1; }
+        100% { opacity: 0; transform: translateY(-22px); }
+      }
+      .debt-hint {
+        text-align: center;
+        color: var(--ink-faint);
+        font-size: 13px;
+        letter-spacing: 0.14em;
+        margin-top: 9px;
+        font-weight: 500;
+      }
+
+      .progress {
+        text-align: center;
+        color: var(--ink-faint);
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        margin: 16px 0 10px;
+        font-weight: 700;
+      }
+
+      /* ---------- card ---------- */
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--panel-edge);
+        border-radius: 18px;
+        padding: 26px 22px 24px;
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        animation: cardIn 0.35s ease;
+      }
+      .card.resolved { cursor: default; }
+      @keyframes cardIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .card-meta {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .card-year {
+        font-family: "Noto Serif TC", serif;
+        font-weight: 900;
+        font-size: 26px;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .card-who { font-weight: 700; font-size: 15px; color: var(--ink-dim); }
+      .card-q {
+        font-family: "Noto Serif TC", serif;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.75;
+        margin: 0;
+      }
+      .card-hint {
+        margin-top: 18px;
+        font-size: 12.5px;
+        color: var(--ink-faint);
+        text-align: center;
+        letter-spacing: 0.06em;
+      }
+
+      /* ---------- choices ---------- */
+      .choices {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .choice-btn {
+        appearance: none;
+        border: 1px solid var(--panel-edge);
+        background: var(--bg-2);
+        color: var(--ink);
+        border-radius: var(--radius);
+        padding: 16px 12px;
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.5;
+        cursor: pointer;
+        min-height: 64px;
+        transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+      }
+      .choice-btn .arrow { display: block; font-size: 18px; color: var(--accent); margin-bottom: 2px; }
+      .choice-btn:hover, .choice-btn:focus-visible { border-color: var(--accent); background: var(--panel); }
+      .choice-btn:active { transform: scale(0.98); }
+      .choice-btn.picked { border-color: var(--accent); background: var(--fact-bg); }
+
+      /* ---------- resolution ---------- */
+      .resolution { margin-top: 14px; animation: cardIn 0.3s ease; }
+      .fx-box {
+        background: var(--bg-2);
+        border: 1px solid var(--panel-edge);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+      }
+      .fx-box h3, .fact-box h3, .verdict h3 {
+        margin: 0 0 8px;
+        font-size: 12.5px;
+        letter-spacing: 0.22em;
+        color: var(--ink-faint);
+        font-weight: 700;
+      }
+      .fx-line { display: flex; justify-content: space-between; font-size: 15px; padding: 2px 0; }
+      .fx-line .amt { font-weight: 900; font-variant-numeric: tabular-nums; }
+      .fx-line .amt.up { color: var(--good); }
+      .fx-line .amt.down { color: var(--bad); }
+      .fx-trend {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px dashed var(--panel-edge);
+        color: var(--ink-faint);
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .fact-box {
+        margin-top: 12px;
+        background: var(--fact-bg);
+        border: 1px solid var(--fact-edge);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+      }
+      .fact-box h3 { color: var(--accent); }
+      .fact-box p { margin: 0; font-size: 15.5px; line-height: 1.8; }
+      .src-box { margin-top: 12px; }
+      .src-toggle {
+        appearance: none;
+        width: 100%;
+        text-align: left;
+        background: var(--src-bg);
+        border: 1px solid var(--panel-edge);
+        color: var(--ink-dim);
+        border-radius: var(--radius);
+        padding: 11px 16px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.1em;
+      }
+      .src-body {
+        display: none;
+        background: var(--src-bg);
+        border: 1px solid var(--panel-edge);
+        border-top: none;
+        border-radius: 0 0 var(--radius) var(--radius);
+        padding: 12px 16px;
+        font-size: 14px;
+        color: var(--ink-dim);
+        line-height: 1.8;
+      }
+      .src-box.open .src-body { display: block; }
+      .src-box.open .src-toggle { border-radius: var(--radius) var(--radius) 0 0; }
+
+      .next-btn, .primary-btn {
+        appearance: none;
+        width: 100%;
+        margin-top: 16px;
+        border: none;
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-radius: var(--radius);
+        padding: 15px;
+        font-family: inherit;
+        font-size: 17px;
+        font-weight: 900;
+        cursor: pointer;
+        letter-spacing: 0.08em;
+      }
+      .next-btn:active, .primary-btn:active { transform: scale(0.99); }
+
+      /* ---------- start / end screens ---------- */
+      .screen { animation: cardIn 0.35s ease; }
+      .start-screen { text-align: center; padding-top: 9vh; }
+      .start-screen .kicker {
+        font-size: 13px; letter-spacing: 0.3em; color: var(--ink-faint); font-weight: 700; margin-bottom: 14px;
+      }
+      .start-screen h1 {
+        font-family: "Noto Serif TC", serif;
+        font-size: 44px;
+        font-weight: 900;
+        margin: 0 0 6px;
+        line-height: 1.25;
+      }
+      .start-screen .en-subtitle {
+        font-size: 15px;
+        letter-spacing: 0.3em;
+        color: var(--ink-dim);
+        font-weight: 700;
+        margin: 0 0 14px;
+      }
+      .start-screen .subtitle {
+        font-family: "Noto Serif TC", serif;
+        font-size: 18px;
+        color: var(--accent);
+        font-weight: 700;
+        margin: 0 0 26px;
+      }
+      .start-screen .intro {
+        font-size: 16.5px;
+        line-height: 2;
+        color: var(--ink-dim);
+        max-width: 26em;
+        margin: 0 auto 10px;
+      }
+      .start-screen .primary-btn { max-width: 320px; margin-left: auto; margin-right: auto; }
+
+      .end-screen h1 {
+        font-family: "Noto Serif TC", serif;
+        font-size: 30px;
+        font-weight: 900;
+        line-height: 1.45;
+        margin: 8px 0 10px;
+      }
+      .end-screen .death-line {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--bad);
+        margin: 0 0 6px;
+      }
+      .end-screen .fell-at { color: var(--ink-dim); font-size: 15px; margin: 0 0 4px; }
+      .end-screen .epilogue { font-size: 16.5px; line-height: 1.9; color: var(--ink-dim); }
+      .end-screen .bonus {
+        margin-top: 14px;
+        background: var(--fact-bg);
+        border: 1px solid var(--fact-edge);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        font-size: 15.5px;
+        line-height: 1.85;
+      }
+      .final-meters {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 14px;
+        margin: 16px 0 4px;
+        font-size: 14.5px;
+      }
+      .final-meters .fm { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--panel-edge); padding: 4px 0; }
+      .final-meters .fm b { font-variant-numeric: tabular-nums; }
+
+      .history-list { margin: 18px 0 0; padding: 0; list-style: none; }
+      .history-list li {
+        border: 1px solid var(--panel-edge);
+        background: var(--bg-2);
+        border-radius: var(--radius);
+        padding: 11px 14px;
+        margin-bottom: 8px;
+        font-size: 14.5px;
+        line-height: 1.7;
+      }
+      .history-list .hl-head { font-weight: 700; color: var(--ink-dim); font-size: 13px; letter-spacing: 0.05em; }
+      .tag {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 900;
+        border-radius: 99px;
+        padding: 1px 9px;
+        margin-left: 6px;
+        vertical-align: 1px;
+      }
+      .tag.same { background: var(--fact-bg); color: var(--accent); border: 1px solid var(--fact-edge); }
+      .tag.diff { background: transparent; color: var(--ink-faint); border: 1px solid var(--panel-edge); }
+
+      .verdict { margin-top: 22px; }
+      .verdict > h2 {
+        font-family: "Noto Serif TC", serif;
+        font-size: 21px;
+        font-weight: 900;
+        margin: 0 0 12px;
+      }
+      .verdict-grid { display: grid; gap: 10px; }
+      .verdict-cell {
+        border: 1px solid var(--panel-edge);
+        background: var(--panel);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+      }
+      .verdict-cell h3 { color: var(--accent); }
+      .verdict-cell p, .verdict-cell li { font-size: 15px; line-height: 1.85; }
+      .verdict-cell p { margin: 0; }
+      .verdict-cell ul { margin: 0; padding-left: 1.25em; }
+      .section-label {
+        font-size: 12.5px; letter-spacing: 0.22em; color: var(--ink-faint); font-weight: 700; margin: 22px 0 8px;
+      }
+      .hidden { display: none !important; }
+      @media (prefers-reduced-motion: reduce) {
+        .card, .screen, .resolution { animation: none; }
+        .delta { animation-duration: 0.01s; }
+        .meter-fill { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- meters -->
+      <div class="meters hidden" id="meters" aria-label="三項指標">
+        <div class="meter" id="m-births">
+          <div class="meter-head"><span class="meter-name">出生人口</span><span class="meter-val">45</span></div>
+          <div class="meter-track"><div class="meter-fill" style="width:45%"></div></div>
+        </div>
+        <div class="meter" id="m-patience">
+          <div class="meter-head"><span class="meter-name">家長耐心</span><span class="meter-val">58</span></div>
+          <div class="meter-track"><div class="meter-fill" style="width:58%"></div></div>
+        </div>
+        <div class="meter" id="m-money">
+          <div class="meter-head"><span class="meter-name">財政</span><span class="meter-val">60</span></div>
+          <div class="meter-track"><div class="meter-fill" style="width:60%"></div></div>
+        </div>
+      </div>
+      <div class="debt-hint hidden" id="debtHint">有些帳，還沒算。</div>
+
+      <!-- start screen -->
+      <section class="screen start-screen" id="startScreen">
+        <div class="kicker">少子女化政策模擬</div>
+        <h1>《少子女化拯救器》</h1>
+        <p class="en-subtitle">Baby or Bust</p>
+        <p class="subtitle">公共化、準公共、育兒津貼——三支柱同時上，你顧得來嗎？</p>
+        <p class="intro">2018 年，你接下行政院。主線八張卡，但後果和事件由你的選擇招來——這一刻點的頭，過一兩張就找上門。只有一個目標：不要讓任何指標歸零，也不要讓它爆表。</p>
+        <button class="primary-btn" id="startBtn" type="button">開始執政</button>
+      </section>
+
+      <!-- game screen -->
+      <section class="screen hidden" id="gameScreen">
+        <div class="progress" id="progress">第 1 張 · 主線 1/8</div>
+        <div class="card" id="card">
+          <div class="card-meta">
+            <span class="card-year" id="cardYear"></span>
+            <span class="card-who" id="cardWho"></span>
+          </div>
+          <p class="card-q" id="cardQ"></p>
+          <div class="card-hint" id="cardHint">點卡片左半邊或右半邊，或按下方按鈕，做你的決定</div>
+        </div>
+        <div class="choices" id="choices">
+          <button class="choice-btn" id="btnLeft" type="button"><span class="arrow">← 左</span><span id="labelLeft"></span></button>
+          <button class="choice-btn" id="btnRight" type="button"><span class="arrow">右 →</span><span id="labelRight"></span></button>
+        </div>
+        <div class="resolution hidden" id="resolution">
+          <div class="fx-box">
+            <h3>指標變動</h3>
+            <div id="fxLines"></div>
+            <div id="fxTrends"></div>
+          </div>
+          <div class="fact-box">
+            <h3 id="factTitle">史實／現實對照</h3>
+            <p id="factText"></p>
+          </div>
+          <div class="src-box" id="srcBox">
+            <button class="src-toggle" id="srcToggle" type="button" aria-expanded="false">依據 ▸</button>
+            <div class="src-body" id="srcBody"></div>
+          </div>
+          <button class="next-btn" id="nextBtn" type="button">下一張</button>
+        </div>
+      </section>
+
+      <!-- end screen -->
+      <section class="screen hidden" id="endScreen"></section>
+    </div>
+
+    <script>
+      "use strict";
+
+      var METERS = [
+        { key: "births",   name: "出生人口", el: "m-births" },
+        { key: "patience", name: "家長耐心", el: "m-patience" },
+        { key: "money",    name: "財政",     el: "m-money" }
+      ];
+
+      var ENDINGS = {
+        "births-low":   "出生人口歸零。產房先空了，這題不用再答了。",
+        "patience-low": "家長耐心歸零。連署和抗議包圍行政院，你的政策，沒人再聽了。",
+        "patience-high":"家長耐心爆表。期待被你養到無限大，任何政策都變成不夠。",
+        "money-low":    "財政歸零。預算中心把計畫退回，立法院刪到見骨。",
+        "money-high":   "財政爆表。錢多到失控，審計部和監察院同時敲門。"
+      };
+
+      /* ================= 卡表 =================
+         kind: main 主線 / cons 後果 / event 事件
+         fx: {births, patience, money}；debt: 品質債增減（隱藏）        */
+
+      var MAIN = [
+        {
+          id: "S1", kind: "main", year: "2018", who: "行政院政務委員 林萬億",
+          q: "「公共化幼兒園要蓋好幾年，家長等不及。育兒津貼先擴大，直接發錢到 2 到 4 歲，好不好？」",
+          left:  { label: "先蓋公幼再說", fx: { money: -5, patience: -13 } },
+          right: { label: "津貼先發",     fx: { births: 1, money: -10, patience: 8 } },
+          history: "right",
+          fact: "政府選了右。而且不只右：公共化、準公共、津貼，三支柱同時上。接下來的每一張卡，都是那一天的帳單。",
+          source: "《我國少子女化對策計畫》（行政院 2018 年核定）「擴大育兒津貼」：0–2 歲自 2018 年 8 月實施、2–4 歲自 2019 年 8 月實施，每月 2,500 元。"
+        },
+        {
+          id: "S2", kind: "main", year: "2018", who: "私立幼兒園業者",
+          q: "「讓我們簽約變『準公共』，名額立刻多十幾萬個。條件是：收費和評鑑，別管太嚴。」",
+          left:  { label: "嚴管才准加入", fx: { money: -7, patience: 2 } },
+          right: { label: "先求有量",     fx: { money: -9, patience: 9 }, debt: 2 },
+          history: "right",
+          fact: "政府選了右。準公共快速擴張，平價名額從 2016 年約 18 萬個，衝到 2022 年逾 56 萬個。",
+          source: "計畫核定本「建置托育準公共化機制」：私幼簽約加入、家長月繳不超過 4,500 元；行政院成果說明（2022）：平價教保名額逾 56 萬個。"
+        },
+        {
+          id: "S4", kind: "main", year: "2021", who: "行政院院長",
+          q: "「『0 到 6 歲國家一起養』：津貼加倍，明年到五千；就學費用上限再壓低。做不做？」",
+          left:  { label: "量力而為", fx: { money: 6, patience: -13 } },
+          right: { label: "加碼到底", fx: { births: 1, money: -12, patience: 8 } },
+          history: "right",
+          fact: "政府選了右。2022 年 8 月，育兒津貼達到每月 5,000 元。",
+          source: "少子女化對策計畫 110 年修正案：津貼分階段調高 3,500 元 → 5,000 元，就學費用上限降至 3,000 元。"
+        },
+        {
+          id: "S3", kind: "main", year: "2021", who: "私立幼兒園園長",
+          q: "「三級警戒一宣布，全國停課。家長要退費、老師要薪水，政府的紓困是貸款不是現金，我夾在中間。」",
+          left:  { label: "政府補助園所度小月", fx: { money: -11, patience: 5 } },
+          right: { label: "園所與家長自行協調", fx: { money: 2, patience: -8 } },
+          fact: "2021 年三級警戒，全國幼兒園停課近七週（5 月 19 日至 7 月 2 日）。教育部的紓困以貸款與利息補貼為主，公司登記的園所被排除在外；退費沒有全國統一基準，各縣市公式並存。官方說 85% 園所復園，媒體實查新北市返園的孩子只有約 28%——園開了，不等於孩子回來了。",
+          source: "教育部 2021 年因應三級警戒之幼兒園停課退費處理與紓困措施。"
+        },
+        {
+          id: "S5", kind: "main", year: "2022", who: "立法委員",
+          q: "「幼照法大修：不適任教保員全國列管，該退場就退場。業者說，太嚴會沒人敢做幼教。修不修？」",
+          left:  { label: "從嚴修法", fx: { money: -7, patience: 3 }, debt: -1 },
+          right: { label: "再緩一緩", fx: { patience: 1 }, debt: 1 },
+          history: "left",
+          fact: "立法院選了左。幼照法修正與教保服務人員條例於 2022 年 6 月 29 日公布，2023 年 3 月 1 日施行。",
+          source: "總統令公布兩法全文（華總一義字第 11100053321 號、第 11100053331 號）。"
+        },
+        {
+          id: "S6", kind: "main", year: "2024", who: "教保員代表",
+          q: "「我們月薪三萬出頭，責任卻是人命。學妹們一個個轉行，再不調薪，教室裡要沒有大人了。」",
+          left:  { label: "全面調薪留才",   fx: { money: -11, patience: 5 }, debt: -1 },
+          right: { label: "財政困難先凍薪", fx: { money: 4, patience: -3 }, debt: 1 },
+          fact: "教保員長期低薪、人力流失；公托與準公共薪資基準多次調整，仍追不上人力市場。",
+          source: "教育部準公共幼兒園教保服務人員薪資基準（歷年公告）與教保人力流失相關統計。"
+        },
+        {
+          id: "S7", kind: "main", year: "2026", who: "教育部官員",
+          q: "「盤點出爐：平價名額 52 萬，但 49 個行政區未達標，2 歲專班最缺。錢和場地，你只能先選一個。」",
+          left:  { label: "砸錢轉型增班", fx: { money: -8, patience: 6 } },
+          right: { label: "再等等看",     fx: { patience: -7 } },
+          fact: "教育部 2026 年盤點：49 個行政區平價教保未達 80%、公共化未達 40%，都會區公幼優先增設 2 歲專班。",
+          source: "教育部 115 學年度平價教保服務盤點結果（2026）。"
+        },
+        {
+          id: "S8", kind: "main", year: "2026", who: "立法院預算中心",
+          q: "「我們的報告出來了：少子女化預算八年漲十七倍，生育率 0.695，全球最低。最後一題：還要再加碼嗎？」",
+          left:  { label: "換工具，轉向服務與治理", fx: { money: 8, patience: -7 } },
+          right: { label: "再加碼一次",             fx: { births: 1, money: -12, patience: 5 } },
+          history: "right",
+          fact: "現實選了右。新的臺灣人口對策新戰略推出 0 到 18 歲成長津貼，單這一項就編了 1,853 億元。故事還在繼續。",
+          source: "立法院預算中心評估報告（2026）：少子女化相關預算自 107 年度 198.8 億元增至 116 年度 3,666.7 億元；總生育率自 2017 年 1.125 人降至 2025 年 0.695 人，普惠式加碼效果有限。"
+        }
+      ];
+
+      var CONS = {
+        K1: {
+          id: "K1", kind: "cons", who: "縣市長",
+          q: "「中央發津貼，縣市被比下去。本縣加碼，你跟不跟？」",
+          left:  { label: "中央跟進不落人後", fx: { money: -7, patience: 5 } },
+          right: { label: "各縣市自己想辦法", fx: { patience: -6 } },
+          fact: "各縣市生育與育兒補助競相加碼，形成福利競賽。",
+          source: "各縣市政府生育獎勵金與育兒津貼加碼公告（歷年）。"
+        },
+        K2: {
+          id: "K2", kind: "cons", who: "小學校長",
+          q: "「增班趕工，教室有了，合格教保員還在考。先放寬資格，還是讓家長繼續等？」",
+          left:  { label: "放寬資格先頂上", fx: { patience: 3 }, debt: 1 },
+          right: { label: "寧缺勿濫慢慢來", fx: { patience: -6 } },
+          fact: "公共化增班的師資缺口與代理人力問題。",
+          source: "教育部公共化幼兒園增班計畫與教保服務人員人力統計。"
+        },
+        K3: {
+          id: "K3", kind: "cons", who: "教育部科長",
+          q: "「準公共幾百園要稽核，我的訪視人力只有這些。逐園查，還是書面審就好？」",
+          left:  { label: "加派人力逐園查", fx: { money: -7 }, debt: -1 },
+          right: { label: "書面審查為主",   fx: { patience: 1 }, debt: 1 },
+          fact: "準公共品質稽核與地方訪視人力長期不足。",
+          source: "教育部準公共幼兒園審核與訪視機制相關規定。"
+        },
+        K4: {
+          id: "K4", kind: "cons", who: "新聞快訊",
+          q: "「曾被通報的不適任人員，換了一家幼兒園又出事。列管還沒立法，怎麼辦？」",
+          left:  { label: "緊急命令先列管", fx: { money: -5, patience: 4 } },
+          right: { label: "等修法下個會期", fx: { patience: -8 } },
+          fact: "培諾米達案 2022 年首起通報未清查，不適任人員跨園流動，與列管法制化之間有一段時間差。",
+          source: "培諾米達幼兒園案相關報導與監察院調查紀錄。"
+        },
+        K5: {
+          id: "K5", kind: "cons", who: "私立幼兒園業者",
+          q: "「列管上路、成本上升，小園撐不住要退場。都會區名額馬上少一截。」",
+          left:  { label: "輔導轉型給緩衝", fx: { money: -6, patience: 2 } },
+          right: { label: "該退就退",       fx: { patience: -6 } },
+          fact: "修法與品質要求提高之後，園所退場與名額波動接著發生。",
+          source: "幼兒教育及照顧法修正施行後園所退場情形（教育部統計）。"
+        },
+        K6: {
+          id: "K6", kind: "cons", who: "家長團體",
+          q: "「監視器裝了，園所說成本轉嫁、學費要漲，有的乾脆退場。裝設費誰出？」",
+          left:  { label: "政府補貼裝設", fx: { money: -7, patience: 2 } },
+          right: { label: "市場自己調節", fx: { patience: -5 } },
+          fact: "監視器強制裝設的成本轉嫁與退場爭議。",
+          source: "幼兒園監視器裝設爭議相關報導與家長團體訴求。"
+        },
+        K7: {
+          id: "K7", kind: "cons", who: "監察委員",
+          q: "「糾正案通過：證據保全失靈、督導流於形式。要不要公開道歉？」",
+          left:  { label: "公開道歉全面檢討", fx: { money: -4, patience: 3 } },
+          right: { label: "尊重調查不認錯",   fx: { patience: -8 } },
+          fact: "監察院板橋案糾正新北市政府，並批評教育部督導空言。",
+          source: "監察院板橋私幼案糾正案文（糾正新北市政府）。"
+        },
+        K8: {
+          id: "K8", kind: "cons", who: "家長",
+          q: "「凍薪的結果來了：附近三家園都缺老師，新班開不成，我的孩子沒地方去。」",
+          left:  { label: "緊急加給救火",   fx: { money: -8, patience: 3 } },
+          right: { label: "請家長共體時艱", fx: { patience: -8 } },
+          fact: "教保人力荒與招生名額不足，是凍薪之後寄到的帳單。",
+          source: "教保服務人員人力缺口相關統計與報導。"
+        },
+        K9: {
+          id: "K9", kind: "cons", who: "預算中心",
+          q: "「財政亮紅燈。再照這樣花，結算報告會很難看。現在踩煞車，還是等結算再說？」",
+          left:  { label: "啟動撙節",           fx: { money: 5, patience: -9 } },
+          right: { label: "錢能解決的都是小事", fx: { money: -6, patience: 4 } },
+          fact: "立法院預算中心對少子女化預算效益的持續質疑。",
+          source: "立法院預算中心少子女化對策計畫評估報告。"
+        }
+      };
+
+      var EVENTS = {
+        E1: {
+          id: "E1", kind: "event", year: "2023", who: "監察委員",
+          q: "「板橋幼兒園案燒起來了。家長問：監視器要不要全面強制裝？不安裝，下次出事，證據還是不保不住。」",
+          left:  { label: "全面強制",     fx: { money: -9, patience: 5 } },
+          right: { label: "尊重園所自主", fx: { patience: -11 } },
+          fact: "中央沒有立法全面強制。監察院糾正新北市政府：未即時查扣調閱監視器保全證據，並指教育部督導不足。",
+          source: "監察院板橋私幼案糾正案文（糾正新北市政府）。"
+        },
+        E2: {
+          id: "E2", kind: "event", who: "監察委員",
+          q: "「2022 年就有人通報，沒人把他停下來。四年後他還在教室裡。這次要徹查列管，還是當個案處理？」",
+          left:  { label: "全國總清列管", fx: { money: -8, patience: 4 } },
+          right: { label: "個案處理",     fx: { patience: -10 } },
+          fact: "培諾米達幼兒園案，監察院 2025 年糾正臺北市政府。",
+          source: "監察院培諾米達幼兒園案糾正案文（2025，糾正臺北市政府）。"
+        },
+        E3: {
+          id: "E3", kind: "event", who: "社工督導",
+          q: "「居托訪視人力長期不足，紀錄甚至有人代簽。一個孩子就這樣漏接了。」",
+          left:  { label: "訪視頻率加倍，補足人力", fx: { money: -8, patience: 3 } },
+          right: { label: "檢討流程就好",           fx: { patience: -9 } },
+          fact: "剴剴案，監察院 2025 年糾正衛福部與雙北市，居托訪視紀錄不實。",
+          source: "監察院剴剴案糾正案文（2025，糾正衛生福利部與臺北市、新北市政府）。"
+        }
+      };
+
+      /* 後果卡觸發表：卡 id → 邊 → [後果卡 id, 插入位置（0=下一張, 1=隔一張）] */
+      var TRIGGERS = {
+        S1: { right: ["K1", 0], left: ["K2", 1] },
+        S2: { right: ["K3", 1] },
+        S4: { right: ["K1", 0] },
+        S5: { right: ["K4", 0], left: ["K5", 1] },
+        S6: { right: ["K8", 1] },
+        E1: { left: ["K6", 0], right: ["K7", 0] }
+      };
+
+      var state = null;
+
+      function freshState() {
+        return {
+          queue: MAIN.slice(),
+          current: null,
+          phase: "choose", // choose | resolved
+          values: { births: 45, patience: 58, money: 60 },
+          debt: 0,
+          k1Done: false,
+          k9Done: false,
+          firedEvents: {},
+          eventsFired: 0,
+          scandal: false,   // 第一張事件卡爆發後為 true
+          mainPlayed: 0,
+          playedCount: 0,
+          picks: [],        // {card, side}
+          ending: null
+        };
+      }
+
+      function $(id) { return document.getElementById(id); }
+
+      function fmt(n) { return (n > 0 ? "+" : "−") + Math.abs(n); }
+
+      function renderMeters(changed) {
+        METERS.forEach(function (m) {
+          var root = $(m.el);
+          var v = state.values[m.key];
+          root.querySelector(".meter-val").textContent = v;
+          root.querySelector(".meter-fill").style.width = Math.max(0, Math.min(100, v)) + "%";
+          root.classList.toggle("danger", v <= 15 || v >= 85);
+          if (changed && changed[m.key]) {
+            var d = document.createElement("span");
+            d.className = "delta " + (changed[m.key] > 0 ? "up" : "down");
+            d.textContent = fmt(changed[m.key]);
+            root.appendChild(d);
+            setTimeout(function () { d.remove(); }, 1500);
+          }
+        });
+        $("debtHint").classList.toggle("hidden", !(state.debt >= 2));
+      }
+
+      function showScreen(name) {
+        $("startScreen").classList.toggle("hidden", name !== "start");
+        $("gameScreen").classList.toggle("hidden", name !== "game");
+        $("endScreen").classList.toggle("hidden", name !== "end");
+        $("meters").classList.toggle("hidden", name === "start");
+        if (name === "start") $("debtHint").classList.add("hidden");
+      }
+
+      function drawCard() {
+        var c = state.queue.shift();
+        state.current = c;
+        state.phase = "choose";
+        if (c.kind === "event") state.scandal = true;
+        var mainSeen = state.mainPlayed + (c.kind === "main" ? 1 : 0);
+        $("progress").textContent = "第 " + (state.playedCount + 1) + " 張 · 主線 " + mainSeen + "/8";
+        $("cardYear").textContent = c.year ? c.year : (c.kind === "event" ? "事件" : "後果");
+        $("cardWho").textContent = "· " + c.who;
+        $("cardQ").textContent = c.q;
+        $("labelLeft").textContent = c.left.label;
+        $("labelRight").textContent = c.right.label;
+        $("btnLeft").classList.remove("picked");
+        $("btnRight").classList.remove("picked");
+        $("card").classList.remove("resolved");
+        $("cardHint").classList.remove("hidden");
+        $("choices").classList.remove("hidden");
+        $("resolution").classList.add("hidden");
+        var card = $("card");
+        card.style.animation = "none";
+        void card.offsetWidth;
+        card.style.animation = "";
+        renderMeters(null);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function checkEnding() {
+        var v = state.values;
+        if (v.births <= 0) return "births-low";
+        if (v.patience <= 0) return "patience-low";
+        if (v.patience >= 100) return "patience-high";
+        if (v.money <= 0) return "money-low";
+        if (v.money >= 100) return "money-high";
+        return null;
+      }
+
+      function insertCons(id, pos) {
+        var card = CONS[id];
+        if (!card) return;
+        var at = Math.min(pos, state.queue.length);
+        state.queue.splice(at, 0, card);
+      }
+
+      /* 結算後、抽下一張前：後果卡插入 → K9 檢查 → 事件卡檢查 */
+      function scheduleConsequences(card, side) {
+        var t = TRIGGERS[card.id];
+        if (t && t[side]) {
+          var cid = t[side][0];
+          if (cid === "K1") {
+            if (!state.k1Done) { state.k1Done = true; insertCons("K1", t[side][1]); }
+          } else {
+            insertCons(cid, t[side][1]);
+          }
+        }
+        // K9：財政首次 ≤25，成為下一張
+        if (!state.k9Done && state.values.money <= 25) {
+          state.k9Done = true;
+          state.queue.unshift(CONS.K9);
+        }
+        // 事件卡：一局至多 2 張；S8 打完後不再觸發
+        if (card.id !== "S8" && state.eventsFired < 2) {
+          var ev = null;
+          if (!state.firedEvents.E3 && state.mainPlayed >= 3 && state.values.money <= 20) ev = EVENTS.E3;
+          else if (!state.firedEvents.E1 && state.mainPlayed >= 4 && state.debt >= 3) ev = EVENTS.E1;
+          else if (!state.firedEvents.E2 && state.mainPlayed >= 4 && state.debt >= 5) ev = EVENTS.E2;
+          if (ev) {
+            state.firedEvents[ev.id] = true;
+            state.eventsFired += 1;
+            state.queue.unshift(ev);
+          }
+        }
+      }
+
+      function choose(side) {
+        if (!state || state.phase !== "choose") return;
+        state.phase = "resolved";
+        var c = state.current;
+        var opt = c[side];
+
+        // 搖擺稅：與上一張反向，家長耐心 −4
+        var prevSide = state.picks.length ? state.picks[state.picks.length - 1].side : null;
+        var swingTax = (prevSide && prevSide !== side) ? -4 : 0;
+
+        // 品質債（隱藏）：增減定義在所選邊的選項物件上（opt.debt）
+        if (opt.debt) state.debt = Math.max(0, state.debt + opt.debt);
+
+        // E1 右且品質債 ≥4：額外 −6
+        var e1Extra = 0;
+        if (c.id === "E1" && side === "right" && state.debt >= 4) e1Extra = -6;
+
+        state.picks.push({ card: c, side: side });
+
+        var fx = {};
+        var k;
+        for (k in opt.fx) fx[k] = opt.fx[k];
+
+        // 每卡固定衰減：時代趨勢出生 −2；期待通膨耐心 −2（第 1–6 張）／−3（第 7 張起）
+        var cardNo = state.playedCount + 1;
+        var trendBirths = -2;
+        var inflation = cardNo <= 6 ? -2 : -3;
+        var scandalExtra = state.scandal ? -1 : 0;
+
+        // 全分辨率一次套用
+        var totals = { births: 0, patience: 0, money: 0 };
+        for (k in fx) { state.values[k] += fx[k]; totals[k] += fx[k]; }
+        if (swingTax) { state.values.patience += swingTax; totals.patience += swingTax; }
+        if (e1Extra) { state.values.patience += e1Extra; totals.patience += e1Extra; }
+        state.values.births += trendBirths; totals.births += trendBirths;
+        state.values.patience += inflation; totals.patience += inflation;
+        if (scandalExtra) { state.values.patience += scandalExtra; totals.patience += scandalExtra; }
+
+        state.playedCount += 1;
+        if (c.kind === "main") state.mainPlayed += 1;
+
+        renderMeters(totals);
+
+        // 摘要：卡片效果
+        var lines = "";
+        METERS.forEach(function (m) {
+          if (fx[m.key]) {
+            lines += '<div class="fx-line"><span>' + m.name + '</span><span class="amt ' +
+              (fx[m.key] > 0 ? "up" : "down") + '">' + fmt(fx[m.key]) + "</span></div>";
+          }
+        });
+        if (swingTax) {
+          lines += '<div class="fx-line"><span>政策搖擺，家長無所適從：家長耐心</span><span class="amt down">−4</span></div>';
+        }
+        if (e1Extra) {
+          lines += '<div class="fx-line"><span>累積的品質問題在這裡一起爆：家長耐心</span><span class="amt down">−6</span></div>';
+        }
+        $("fxLines").innerHTML = lines;
+
+        // 灰字行：趨勢 / 通膨 / 信任崩壞
+        var trends = '<div class="fx-trend"><span>時代趨勢</span><span>出生人口 −2</span></div>';
+        trends += '<div class="fx-trend"><span>期待通膨（給過的，下次就是基本款）</span><span>家長耐心 ' + fmt(inflation) + "</span></div>";
+        if (scandalExtra) {
+          trends += '<div class="fx-trend"><span>信任崩壞：家長耐心額外 −1（醜聞之後，家長更難取悅）</span><span></span></div>';
+        }
+        $("fxTrends").innerHTML = trends;
+
+        $("factTitle").textContent = c.kind === "cons" ? "現實對照" : "史實／現實對照";
+        $("factText").textContent = c.fact;
+        $("srcBody").textContent = c.source;
+        $("srcBox").classList.remove("open");
+        $("srcToggle").textContent = "依據 ▸";
+        $("srcToggle").setAttribute("aria-expanded", "false");
+
+        (side === "left" ? $("btnLeft") : $("btnRight")).classList.add("picked");
+        $("card").classList.add("resolved");
+        $("cardHint").classList.add("hidden");
+
+        // 死亡判定在全分辨率之後
+        state.ending = checkEnding();
+        if (!state.ending) scheduleConsequences(c, side);
+        $("nextBtn").textContent = state.ending ? "看結局" : (state.queue.length === 0 ? "看結算" : "下一張");
+        $("resolution").classList.remove("hidden");
+      }
+
+      function next() {
+        if (state.ending) { renderEnd(false); return; }
+        if (state.queue.length === 0) { renderEnd(true); return; }
+        drawCard();
+      }
+
+      function historyListHTML() {
+        var html = '<div class="section-label">你的選擇 vs 史實</div><ul class="history-list">';
+        state.picks.forEach(function (p, i) {
+          var head = "第 " + (i + 1) + " 張 · " + (p.card.year ? p.card.year + " " : "") + p.card.who;
+          html += "<li>" + '<div class="hl-head">' + head + "</div>";
+          if (p.card.history) {
+            var same = p.side === p.card.history;
+            html += "你選了「" + p.card[p.side].label + "」；史實選了「" + p.card[p.card.history].label + "」" +
+              '<span class="tag ' + (same ? "same" : "diff") + '">' + (same ? "與史實同向" : "與史實不同") + "</span>";
+          } else {
+            html += "你選了「" + p.card[p.side].label + "」";
+          }
+          html += "</li>";
+        });
+        html += "</ul>";
+        return html;
+      }
+
+      function verdictHTML() {
+        return '<div class="verdict"><h2>裁判結算</h2><div class="verdict-grid">' +
+          '<div class="verdict-cell"><h3>同意的事實</h3><p>錢史上最多、名額史上最多、生育率史上最低。</p></div>' +
+          '<div class="verdict-cell"><h3>分歧</h3><ul>' +
+          "<li>目標：生育率本來就不是津貼能決定的</li>" +
+          "<li>工具：現金與服務的配比</li>" +
+          "<li>治理：量擴了，監管沒跟上</li>" +
+          "</ul></div>" +
+          '<div class="verdict-cell"><h3>無人回答的問題</h3><p>1.4 的生育率目標是誰定的？又是哪一年，被誰默默放下的？</p></div>' +
+          "</div></div>";
+      }
+
+      function finalMetersHTML() {
+        var html = '<div class="final-meters">';
+        METERS.forEach(function (m) {
+          html += '<div class="fm"><span>' + m.name + "</span><b>" + state.values[m.key] + "</b></div>";
+        });
+        html += '<div class="fm"><span>本局總張數</span><b>' + state.picks.length + " 張</b></div>";
+        return html + "</div>";
+      }
+
+      function renderEnd(completed) {
+        showScreen("end");
+        renderMeters(null);
+        var html = "";
+        if (!completed) {
+          html += '<p class="death-line">' + ENDINGS[state.ending] + "</p>";
+          html += '<p class="fell-at">你倒在第 ' + state.picks.length + " 張卡。</p>";
+          html += finalMetersHTML();
+        } else {
+          html += "<h1>你撐完了八年。</h1>";
+          html += finalMetersHTML();
+          html += '<p class="epilogue">但出生人口還在往下。預算中心那句話，現在輪到你來聽：錢花得最多，生育率史上最低。</p>';
+          var sameCount = 0, histCount = 0;
+          state.picks.forEach(function (p) {
+            if (p.card.history) { histCount++; if (p.side === p.card.history) sameCount++; }
+          });
+          if (histCount > 0 && sameCount >= histCount - 1) {
+            html += '<div class="bonus">你幾乎重演了史實。這局最難的地方是：每一張卡，選哪邊都說得通。</div>';
+          }
+        }
+        html += historyListHTML();
+        html += verdictHTML();
+        html += '<button class="primary-btn" id="restartBtn" type="button">重新開始</button>';
+        $("endScreen").innerHTML = html;
+        $("restartBtn").addEventListener("click", startGame);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function startGame() {
+        state = freshState();
+        showScreen("game");
+        renderMeters(null);
+        drawCard();
+      }
+
+      // events
+      $("startBtn").addEventListener("click", startGame);
+      $("btnLeft").addEventListener("click", function () { choose("left"); });
+      $("btnRight").addEventListener("click", function () { choose("right"); });
+      $("nextBtn").addEventListener("click", next);
+      $("card").addEventListener("click", function (e) {
+        if (!state || state.phase !== "choose") return;
+        var r = $("card").getBoundingClientRect();
+        choose(e.clientX - r.left < r.width / 2 ? "left" : "right");
+      });
+      $("srcToggle").addEventListener("click", function () {
+        var box = $("srcBox");
+        var open = box.classList.toggle("open");
+        $("srcToggle").textContent = open ? "依據 ▾" : "依據 ▸";
+        $("srcToggle").setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    </script>
+  </body>
+</html>
