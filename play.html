@@ -507,9 +507,25 @@ var THEME_PACKS = {
   }
   ,paper: {
     dir: "assets/themes/paper/",
+    /* 剪紙版：一個身分一種動物（不依配件分組）。新增卡務必在此指定。避免負面刻板印象動物（狐狸等）。 */
+    animal: {
+      S1:"owl", S11:"owl", K2:"owl",
+      S2:"beaver", K5:"beaver", K12:"beaver",
+      S4:"giraffe", S5:"giraffe", S8:"giraffe", E2:"giraffe",
+      S3:"hen",
+      S6:"kangaroo", S14:"kangaroo", K13:"kangaroo", K10:"kangaroo",
+      S10:"penguin", K8:"penguin", E1:"penguin",
+      K6:"goose",
+      S13:"sheepdog", K7:"sheepdog",
+      K1:"bear", K11:"bear",
+      K4:"meerkat",
+      S9:"elephant", K3:"elephant", S12:"elephant",
+      K9:"squirrel",
+      E3:"deer"
+    },
     portrait: function(c){
-      var p = PORTRAIT[c.id] || PORTRAIT.S1, t = THEME_PACKS.paper;
-      return '<div class="pport'+(c.kind==="event"?' event':'')+'"><img alt="" src="'+t.dir+p.acc+'.webp"></div>';
+      var t = THEME_PACKS.paper, a = t.animal[c.id] || "owl";
+      return '<div class="pport'+(c.kind==="event"?' event':'')+'"><img alt="" src="'+t.dir+a+'.webp"></div>';
     }
   }
 };
@@ -526,7 +542,8 @@ function setTheme(name){
   var k = $("keyart");
   if (THEME_PACKS[name].dir) {
     if (k) k.setAttribute("src", THEME_PACKS[name].dir + "keyart.webp");
-    BUNNY_ACC.forEach(function(a){ var im = new Image(); im.src = THEME_PACKS[name].dir + a + ".webp"; });
+    var list = THEME_PACKS[name].animal ? Object.keys(THEME_PACKS[name].animal).map(function(k){ return THEME_PACKS[name].animal[k]; }).filter(function(v,i,s){ return s.indexOf(v)===i; }) : BUNNY_ACC;
+    list.forEach(function(a){ var im = new Image(); im.src = THEME_PACKS[name].dir + a + ".webp"; });
   }
 }
 function portraitHTML(c){ return THEME_PACKS[theme].portrait(c); }
