@@ -94,6 +94,29 @@
   body.theme-bunny .log li{border-top-color:#f1d6cb}
   body.theme-bunny .bill{border-color:#ee8f9b;border-radius:20px}
   body.theme-bunny .bill .bh,body.theme-bunny .bill .bt{color:#c0606e;border-color:#ee8f9b}
+  /* ===== 主題：剪紙動物版（整包切換）===== */
+  body.theme-paper{--bar:#f4eee0;--bar-ink:#1e1e1e;--icon-empty:#e6dcc6;--icon-full:#2e54aa;--bg:#f4eee0;--card-back:#e2533f;--ink:#1e1e1e;--cream:#fbf8f0;
+    font-family:"BOBHuninn1","BOBHuninn2","BOBHuninn3","PingFang TC","Microsoft JhengHei",sans-serif}
+  body.theme-paper .app{background:var(--bg)}
+  body.theme-paper .topbar{border-bottom:3px solid #1e1e1e}
+  body.theme-paper #st-births{--icon-full:#e896a0} body.theme-paper #st-money{--icon-full:#d6a828}
+  body.theme-paper .deck,body.theme-paper .card,body.theme-paper .face,body.theme-paper .back{border-radius:0}
+  body.theme-paper .deck{box-shadow:8px 8px 0 #1e1e1e}
+  body.theme-paper .face{border:3px solid #1e1e1e;box-shadow:8px 8px 0 #1e1e1e}
+  body.theme-paper .back::after,body.theme-paper .deck::after{border:3px solid #f4eee0;border-radius:0;background:radial-gradient(circle,#d6a828 0 6px,transparent 7px) 0 0/40px 40px}
+  body.theme-paper .choice{color:#1e1e1e;background:linear-gradient(rgba(251,248,240,.97),rgba(251,248,240,.9) 70%,transparent)}
+  body.theme-paper .who{color:#fbf8f0;background:#e2533f;align-self:center;padding:3px 12px;margin-top:12px;letter-spacing:.06em}
+  body.theme-paper .bottom,body.theme-paper .question.reply{color:#2e54aa}
+  body.theme-paper .screen{background:#f4eee0;color:#1e1e1e}
+  body.theme-paper .btn{border:3px solid #1e1e1e;color:#fbf8f0;background:#2e54aa;border-radius:0;box-shadow:4px 4px 0 #1e1e1e}
+  body.theme-paper .btn:hover{background:#e2533f;color:#fbf8f0}
+  body.theme-paper .log li{border-top-color:#d9cfb8}
+  body.theme-paper .bill{border:3px solid #1e1e1e;border-radius:0;box-shadow:5px 5px 0 #1e1e1e;background:#fbf8f0}
+  body.theme-paper .bill .bh,body.theme-paper .bill .bt{color:#e2533f;border-color:#1e1e1e}
+  .pport{width:100%;height:100%;position:relative}
+  .pport img{width:100%;height:100%;object-fit:cover;display:block}
+  .pport.event{box-shadow:inset 0 0 0 10px #e2533f}
+  body.theme-paper .keyart{display:block;border-radius:0;border:3px solid #1e1e1e;box-shadow:6px 6px 0 #1e1e1e}
   .bport{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative}
   .bport::before{content:"";position:absolute;width:72%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.55)}
   .bport img{position:relative;width:96%;height:auto;display:block}
@@ -143,7 +166,7 @@
     <h1>少子女化拯救器</h1><div class="en">BABY OR BUST</div>
     <p>2018 年，你當上行政院長。左右滑動每一張卡，做出決定。<br>三個指標，任一歸零或爆表，你就下台。</p>
     <button class="btn" id="startBtn">開始執政</button>
-    <div class="themes" id="themes"><button data-theme="classic">經典版</button><button data-theme="bunny">兔兔版</button></div>
+    <div class="themes" id="themes"><button data-theme="classic">經典版</button><button data-theme="bunny">兔兔版</button><button data-theme="paper">剪紙版</button></div>
   </section>
   <section class="screen end hidden" id="end"></section>
 </div>
@@ -482,6 +505,13 @@ var THEME_PACKS = {
       return '<div class="bport'+(c.kind==="event"?' event':'')+'" style="background:'+t.tint[c.kind]+'"><img alt="" src="'+t.dir+p.acc+'.webp"></div>';
     }
   }
+  ,paper: {
+    dir: "assets/themes/paper/",
+    portrait: function(c){
+      var p = PORTRAIT[c.id] || PORTRAIT.S1, t = THEME_PACKS.paper;
+      return '<div class="pport'+(c.kind==="event"?' event':'')+'"><img alt="" src="'+t.dir+p.acc+'.webp"></div>';
+    }
+  }
 };
 var BUNNY_ACC = ["tie","glasses","apron","sash","baby","mic","pin","sign","file"];
 var theme = "classic";
@@ -489,12 +519,14 @@ function setTheme(name){
   if (!THEME_PACKS[name]) name = "classic";
   theme = name;
   document.body.classList.toggle("theme-bunny", name === "bunny");
+  document.body.classList.toggle("theme-paper", name === "paper");
   try { localStorage.setItem("bob-theme", name); } catch(e){}
   var bs = document.querySelectorAll("#themes button");
   for (var i=0;i<bs.length;i++) bs[i].classList.toggle("on", bs[i].getAttribute("data-theme")===name);
-  if (name === "bunny") {
-    var k = $("keyart"); if (k && !k.getAttribute("src")) k.setAttribute("src", THEME_PACKS.bunny.dir + "keyart.webp");
-    BUNNY_ACC.forEach(function(a){ var im = new Image(); im.src = THEME_PACKS.bunny.dir + a + ".webp"; });
+  var k = $("keyart");
+  if (THEME_PACKS[name].dir) {
+    if (k) k.setAttribute("src", THEME_PACKS[name].dir + "keyart.webp");
+    BUNNY_ACC.forEach(function(a){ var im = new Image(); im.src = THEME_PACKS[name].dir + a + ".webp"; });
   }
 }
 function portraitHTML(c){ return THEME_PACKS[theme].portrait(c); }
