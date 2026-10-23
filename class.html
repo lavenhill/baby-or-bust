@@ -19,7 +19,7 @@ body{font-family:"BOBHuninn1","BOBHuninn2","BOBHuninn3",-apple-system,"PingFang 
 .ann b{font-weight:normal;color:#fff;background:#f4879f;border-radius:4px;font-size:11px;padding:2px 6px;flex:none}
 .ann span{flex:1;transition:opacity .3s}
 .ann.flash{animation:fl 1.2s ease 2}@keyframes fl{50%{background:#ffd5e0}}
-#room{position:absolute;top:calc(88px + env(safe-area-inset-top));left:0;right:0;bottom:0;overflow-y:auto;padding:8px 10px 300px;scroll-behavior:smooth}
+#room{position:absolute;top:calc(88px + env(safe-area-inset-top));left:0;right:0;bottom:0;overflow-y:auto;padding:8px 10px 440px;scroll-behavior:smooth}
 .date{text-align:center;margin:10px 0}.date span,.sys span{background:#fae3ec;color:#9a7b7f;font-size:11.5px;border-radius:999px;padding:3px 10px}
 .sys{text-align:center;margin:6px 0 10px}
 .m{display:flex;gap:7px;margin-bottom:10px;align-items:flex-start;animation:pop .25s ease}
@@ -27,26 +27,29 @@ body{font-family:"BOBHuninn1","BOBHuninn2","BOBHuninn3",-apple-system,"PingFang 
 .av{width:36px;height:36px;border-radius:50%;flex:none;background:#fff center/120% no-repeat;border:1px solid rgba(0,0,0,.05)}
 .nm{font-size:11.5px;color:#8a7375;margin-bottom:3px}
 .row{display:flex;align-items:flex-end;gap:5px}
-.b{background:#fae3ec;border:1px solid #f3c9d7;border-radius:16px;padding:8px 11px;font-size:14.5px;line-height:1.45;max-width:236px;position:relative}
+.b{background:#fae3ec;border:1px solid #f3c9d7;border-radius:16px;padding:8px 11px;font-size:15.5px;line-height:1.45;max-width:236px;position:relative}
 .b:before{content:"";position:absolute;left:-5px;top:8px;border:6px solid transparent;border-right-color:#f3c9d7;border-left:0}
+.at{color:#2f7de1}
 .t{font-size:10px;color:#9a8b8b;white-space:nowrap}
 .link{background:#fff;border:1px solid #f3c9d7;border-radius:14px;overflow:hidden;width:236px}
 .link .img{height:62px;background:linear-gradient(135deg,#ffd9cf,#ffeccf);display:flex;align-items:center;justify-content:center;font-size:28px}
 .link .tx{padding:7px 10px;font-size:13.5px;line-height:1.4}.link small{color:#999;font-size:11px;display:block}
 /* 卡片 */
-#deck{position:absolute;left:78px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:6;pointer-events:none}
-.card{pointer-events:auto;position:relative;width:100%;max-width:320px;background:#fffdf8;border-radius:24px;box-shadow:0 16px 34px rgba(90,50,60,.35);padding:14px 16px 12px;color:#6e5046;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+#deck{position:absolute;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;z-index:6;pointer-events:none}
+#orbs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(338px + env(safe-area-inset-bottom));display:flex;gap:16px;z-index:7}
+#slot{width:100%;display:flex;justify-content:center}
+.card{pointer-events:auto;position:relative;width:100%;max-width:420px;background:#fffdf8;border-radius:24px;box-shadow:0 16px 34px rgba(90,50,60,.35);padding:14px 16px 12px;color:#6e5046;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
 .card.ev{background:#fff4ee;border:2px solid #f4879f}
-.card .who{font-size:12px;color:#a0606a}
-.card .q{font-size:14.5px;line-height:1.5;margin-top:5px}
-.card .art{height:84px;margin:6px auto 0;width:84px;background:center/contain no-repeat}
-.card .hint{text-align:center;font-size:11px;color:#c09aa0;margin-top:2px}
-.lab{position:absolute;top:-16px;font-size:14px;background:#f4879f;color:#fff;border-radius:999px;padding:6px 12px;white-space:nowrap;opacity:0;max-width:85%;overflow:hidden;text-overflow:ellipsis}
-.lab.l{left:8px}.lab.r{right:8px;left:auto}
+.card .who{font-size:14px;color:#a0606a}
+.card .q{font-size:17.5px;line-height:1.55;margin-top:6px}
+.card .art{height:96px;margin:8px auto 0;width:96px;background:center/contain no-repeat}
+.card .hint{text-align:center;font-size:13px;color:#c09aa0;margin-top:2px}
+.lab{position:absolute;top:-18px;font-size:16px;background:#f4879f;color:#fff;border-radius:999px;padding:6px 12px;white-space:nowrap;opacity:0;max-width:85%;overflow:hidden;text-overflow:ellipsis}
+.lab.l,.lab.r{left:50%;transform:translateX(-50%)}
 /* 圓球 */
-.orb{position:absolute;width:56px;height:56px;border-radius:50%;background:#fff;border:3px solid #ee8f9b;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,.2);z-index:7;transition:left .25s ease,top .25s ease,bottom .25s ease;pointer-events:none}
+.orb{position:relative;width:58px;height:58px;flex:none;border-radius:50%;background:#fff;border:3px solid #ee8f9b;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,.2);z-index:7;pointer-events:none}
 .orb .lv{position:absolute;left:0;right:0;bottom:0;background:#ffc9c2;transition:height .6s ease}
-.orb span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6e5046}
+.orb span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#6e5046}
 .orb.f{border-color:#e9b77a}.orb.f .lv{background:#ffe0b0}
 .orb.danger{animation:dg 1s infinite}@keyframes dg{50%{box-shadow:0 0 0 6px rgba(244,135,159,.45)}}
 .orb.jump{animation:jp .55s ease-in-out infinite}
@@ -69,9 +72,7 @@ body{font-family:"BOBHuninn1","BOBHuninn2","BOBHuninn3",-apple-system,"PingFang 
   <div class="ann" id="ann"><b>公告</b><span id="annTx">畢業典禮那天的照片，記得補上傳</span></div>
   <div id="room"></div>
   <div class="dim" id="dim"></div>
-  <div class="orb f" id="orbF"><div class="lv"></div><span>財政</span></div>
-  <div class="orb p" id="orbP"><div class="lv"></div><span>耐心</span></div>
-  <div id="deck"></div>
+  <div id="deck"><div id="orbs"><div class="orb f" id="orbF"><div class="lv"></div><span>財政</span></div><div class="orb p" id="orbP"><div class="lv"></div><span>耐心</span></div></div><div id="slot"></div></div>
   <div class="cover" id="start">
     <h1>我們這一班</h1>
     <p>2018 年，你 26 歲，<br>剛當上「少子女化對策辦公室」的研究助理。<br>同學都叫你「顏座」。<br><br>往左、往右滑，決定國家的托育政策。<br>同學們的日子，會在群組裡告訴你。</p>
@@ -406,7 +407,7 @@ function portraitSVG(c){
 /* ===== 主題資產包：每套主題完整提供人像，整局只用一套 ===== */
 
 /* ===== 我們這一班：同學與台詞 ===== */
-var LINES = {"OPEN": [["阿芳", "老顏！聽說你要跟部長開會？？"], ["佩珊", "職稱是政策規劃師，叫聲顏座吧"], ["宗翰", "顏座發達了別忘了立法院啊😏"]], "S1": {"left": [["阿芳", "公幼要抽籤欸，我肚子裡這個抽得到喔？"], ["志豪", "抽籤生小孩，政府是在開樂透喔"]], "right": [["阿芳", "有錢領讚啦，月子中心先訂"], ["志豪", "一個月幾千塊？我房租都不夠繳"]]}, "S2": {"left": [["家豪", "查可以啦，表格可不可以不要每週一份"]], "right": [["家豪", "顏座上道！掛牌那天請大家喝"]]}, "S4": {"left": [["志豪", "不加喔，那我直接放棄想這件事"]], "right": [["志豪", "5,000 是在哈囉，房租一半都不到"]]}, "S3": {"left": [["家豪", "終於不用跪銀行了，感恩"]], "right": [["家豪", "家長要退費，是要我拿什麼退啦"]]}, "S5": {"left": [["宗翰", "三讀了，我老闆搶第一個發新聞笑死"], ["詩涵", "法是嚴了，現場還是沒人去看啊"]], "right": [["宗翰", "研議？？辦公室電話被打爆了"], ["詩涵", "研議的時候孩子還在裡面欸"]]}, "S9": {"left": [["宜君", "1:12 我顧得來啊，問題是人在哪"]], "right": [["宜君", "慢慢來？我現在一個人顧十幾個好嗎"]]}, "S10": {"left": [["志豪", "35 塊比保母便宜，可以算一下"]], "right": [["志豪", "免費喔，報酬率終於好看一點"]]}, "S6": {"left": [["宜君", "29,000 終於進帳戶了，哭"]], "right": [["宜君", "說好的 29,000 咧？？又跳票"]]}, "S14": {"left": [["家豪", "政府出錢請人，我沒意見啊"]], "right": [["家豪", "加班費誰出？還不是園長吞"]]}, "S11": {"left": [["冠宇", "中央一句蓋，我找地找到退休"]], "right": [["冠宇", "又是我去跟大班家長解釋，謝囉"]]}, "S12": {"left": [["志豪", "等社宅蓋好，我都過了想生的年紀"]], "right": [["志豪", "補貼一下來，房東馬上說要漲"]]}, "S13": {"left": [["宗翰", "委員說這次有聽進去，難得欸"]], "right": [["宗翰", "只公布解約的？質詢稿我寫好了"]]}, "S8": {"left": [["家豪", "不補私幼？那我們園收起來好了"], ["阿芳", "平價園在哪？我家附近一間都沒有"], ["宜君", "蓋新園，老師還不是從私幼挖"], ["冠宇", "又來，中央喊蓋，地方去找地"], ["宗翰", "省下預算，我老闆倒是很爽"]], "right": [["家豪", "一萬五！家長搶著來，學費我再研究"], ["阿芳", "學費敢跟著漲就給我試試看"], ["宜君", "園長收了補助，那老師薪水咧？"], ["冠宇", "中央開支票，配合款又是地方出，靠"], ["宗翰", "錢從哪生？下個會期有得吵了"]]}, "K1": {"left": [["冠宇", "中央加碼，地方又要出配合款，傻眼"]], "right": [["冠宇", "縣長叫我寫新聞稿罵中央，你懂的"]]}, "K2": {"left": [["冠宇", "代課老師也是我一個一個拜託來的"]], "right": [["冠宇", "等？家長打來罵的是我欸"]]}, "K3": {"left": [["家豪", "來啊，茶都泡好了"]], "right": [["家豪", "文件喔，我們最會做了😌"]]}, "K4": {"left": [["佩珊", "擋下來？OK 我追下一條"]], "right": [["佩珊", "明天頭版，標題我想好了"]]}, "K5": {"left": [["家豪", "顏座懂事，名額照收"]], "right": [["家豪", "要查是吧，那我們不收了"]]}, "K6": {"left": [["阿芳", "政府出就好，別又偷偷加在學費"]], "right": [["阿芳", "園所出？下學期學費直接漲給你看"]]}, "K7": {"left": [["宗翰", "道歉了，委員說報告會盯到底"]], "right": [["宗翰", "不道歉？委員要開記者會了喔"]]}, "K8": {"left": [["阿芳", "現在才加？我明天已經請假顧小孩了"]], "right": [["阿芳", "再忍？老闆要叫我不用來了"]]}, "K9": {"left": [["宗翰", "帳是好看了，選區家長罵翻"]], "right": [["宗翰", "預算中心報告出來，又被拿去質詢"]]}, "K12": {"left": [["阿芳", "我家那間退出了，明年小孩去哪啦"]], "right": [["阿芳", "兩年後學費是不是又要漲"]]}, "K13": {"left": [["宜君", "終於不用看同學臉色申訴了"]], "right": [["宜君", "陳情要寫園長名字，我是不用上班喔"]]}, "K11": {"left": [["冠宇", "中央扣錢，處長要翻桌了"]], "right": [["冠宇", "地方自己決定，帳也地方扛，很會"]]}, "K10": {"left": [["詩涵", "那個孩子明天終於能去上學了"]], "right": [["詩涵", "規定就是規定，孩子就繼續關在家"]]}, "E1": {"pre": ["佩珊", "又一間虐童，監視器畫面出來了，自己看"], "left": [["宜君", "裝就裝啊，誰有空看畫面？"], ["詩涵", "有畫面很好，但有人在看嗎"], ["阿芳", "有裝我才敢送去，真的"]], "right": [["宜君", "我們園長說：不裝"], ["詩涵", "下一個孩子，又是我去接案"], ["阿芳", "那我每天都要盯著老師問嗎"]]}, "E2": {"pre": ["佩珊", "涉案老師換個縣市繼續教，新聞出來了"], "left": [["宜君", "查我可以，不要把大家都當嫌犯"], ["冠宇", "全國查？表格又是地方填，謝囉"]], "right": [["宜君", "現在家長看我的眼神都怪怪的"], ["冠宇", "下一個出事，鍋又是地方背"]]}, "E3": {"pre": ["佩珊", "社工人力不夠，又上新聞了"], "left": [["詩涵", "多幾個人，終於能去看每個孩子"]], "right": [["詩涵", "抓了人，案子還是沒人去看啊"]]}};
+var LINES = {"OPEN": [["阿芳", "老顏！聽說你要跟部長開會？？"], ["佩珊", "職稱是政策規劃師，叫聲顏座吧"], ["宗翰", "顏座發達了別忘了立法院啊😏"]], "E1": {"pre": ["佩珊", "又一間虐童，監視器畫面出來了，自己看"], "left": [["阿芳", "@老顏 有裝我才敢送去，真的"], ["宜君", "裝就裝啊，誰有空看畫面？"], ["詩涵", "有畫面很好，但有人在看嗎"]], "right": [["阿芳", "@老顏 那我每天都要盯著老師問嗎"], ["宜君", "我們園長說：不裝"], ["詩涵", "下一個孩子，又是我去接案"]]}, "E2": {"pre": ["佩珊", "涉案老師換個縣市繼續教，新聞出來了"], "left": [["宜君", "@老顏 查我可以，不要把大家都當嫌犯"], ["冠宇", "全國查？表格又是地方填，謝囉"]], "right": [["宜君", "@老顏 現在家長看我的眼神都怪怪的"], ["冠宇", "下一個出事，鍋又是地方背"]]}, "E3": {"pre": ["佩珊", "社工人力不夠，又上新聞了"], "left": [["詩涵", "@老顏 多幾個人，我終於能去看每個孩子"], ["宗翰", "社工預算，我老闆說會挺"]], "right": [["詩涵", "@老顏 抓了人，案子還是沒人去看啊"], ["佩珊", "造假的名字，我明天就寫出來"]]}, "S1": {"left": [["阿芳", "@老顏 公幼要抽籤，我肚子裡這個抽得到喔？"], ["志豪", "抽籤生小孩，政府是在開樂透喔"]], "right": [["阿芳", "@老顏 有錢領讚啦，月子中心我先訂了"], ["志豪", "一個月幾千塊？我房租都不夠繳"]]}, "S2": {"left": [["家豪", "@老顏 查可以啦，表格可不可以不要每週一份"], ["阿芳", "有人查，我比較敢送啦"]], "right": [["家豪", "@老顏 上道！我們園掛牌那天請你喝"], ["宜君", "少查？那我們園長更敢亂排班了"]]}, "S4": {"left": [["志豪", "@老顏 不加喔，那我直接放棄想這件事"], ["阿芳", "還以為能多 1,500 買尿布"]], "right": [["阿芳", "@老顏 多 1,500，尿布錢有著落了"], ["志豪", "5,000 是在哈囉，房租一半都不到"]]}, "S3": {"left": [["家豪", "@老顏 終於不用跪銀行了，感恩"], ["宗翰", "這筆錢我老闆會問從哪來"]], "right": [["家豪", "@老顏 家長要退費，是要我拿什麼退啦"], ["宜君", "園長說這個月薪水先欠著…"]]}, "S5": {"left": [["宗翰", "@老顏 三讀了，我老闆搶第一個發新聞笑死"], ["詩涵", "法是嚴了，現場還是沒人去看啊"]], "right": [["詩涵", "@老顏 研議的時候，我手上的孩子還在裡面欸"], ["宗翰", "研議？？辦公室電話被打爆了"]]}, "S9": {"left": [["宜君", "@老顏 1:12 我顧得來啊，問題是人在哪"], ["家豪", "多請老師？薪水你要幫我出喔"]], "right": [["宜君", "@老顏 慢慢來？我現在一個人顧十五個好嗎"], ["阿芳", "一個老師顧十五個，我家的誰在顧啊"]]}, "S10": {"left": [["阿芳", "@老顏 一小時 35，我每天加班要多付好幾百"], ["志豪", "35 塊比保母便宜，可以算一下"]], "right": [["宜君", "@老顏 免費？留下來顧的是我欸，加班費咧"], ["志豪", "免費喔，報酬率終於好看一點"]]}, "S6": {"left": [["宜君", "@老顏 29,000 終於進帳戶了，哭"], ["家豪", "政府加薪，我們園的帳也要重算"]], "right": [["宜君", "@老顏 說好的 29,000 咧？？又跳票"], ["阿芳", "錢給我是不錯啦，但老師都跑了"]]}, "S14": {"left": [["宜君", "@老顏 有人換手，我終於能坐著吃飯"], ["家豪", "政府出錢請人，我沒意見啊"]], "right": [["家豪", "@老顏 加班費誰出？最後還不是我吞"], ["宜君", "錢有了，午睡還是我一個人顧"]]}, "S11": {"left": [["冠宇", "@老顏 中央一句蓋，我找地找到退休"], ["阿芳", "新教室蓋好，我家的都上小學了"]], "right": [["冠宇", "@老顏 又是我去跟大班家長解釋，謝囉"], ["阿芳", "2 歲班終於有位子，抽籤號碼救回來了"]]}, "S12": {"left": [["志豪", "@老顏 等社宅蓋好，我都過了想生的年紀"], ["冠宇", "社宅的地，又是地方要生出來"]], "right": [["志豪", "@老顏 補貼一下來，房東馬上說要漲"], ["阿芳", "有補貼總比沒有好啦"]]}, "S13": {"left": [["家豪", "@老顏 多派人查？我們園又要準備接駕了"], ["宗翰", "委員說這次有聽進去，難得欸"]], "right": [["宗翰", "@老顏 只公布解約的？質詢稿我寫好了"], ["家豪", "只公布解約的，那我還好啦"]]}, "S8": {"left": [["家豪", "@老顏 不補私幼？那我們園收起來好了"], ["阿芳", "平價園在哪？我家附近一間都沒有"], ["宜君", "蓋新園，老師還不是從私幼挖"], ["冠宇", "又來，中央喊蓋，地方去找地"], ["宗翰", "省下預算，我老闆倒是很爽"]], "right": [["家豪", "@老顏 一萬五！家長搶著來，學費我再研究"], ["阿芳", "學費敢跟著漲就給我試試看"], ["宜君", "園長收了補助，那老師薪水咧？"], ["冠宇", "中央開支票，配合款又是地方出，靠"], ["宗翰", "錢從哪生？下個會期有得吵了"]]}, "K1": {"left": [["冠宇", "@老顏 中央加碼，地方配合款又是我在生"], ["阿芳", "兩邊都發？那我戶籍不用遷了"]], "right": [["冠宇", "@老顏 縣長叫我寫新聞稿罵中央，你懂的"], ["志豪", "隔壁發比較多，我考慮遷戶籍了"]]}, "K2": {"left": [["冠宇", "@老顏 代課老師是我一個一個拜託來的"], ["宜君", "沒證照的來，帶班又是我們在教"]], "right": [["冠宇", "@老顏 等？家長打來罵的是我欸"], ["阿芳", "再等一學期，我要請假到什麼時候"]]}, "K3": {"left": [["家豪", "@老顏 來啊，茶都泡好了"], ["冠宇", "一家家看，人力又是地方出"]], "right": [["家豪", "@老顏 文件喔，我們最會做了😌"], ["詩涵", "紙上都很漂亮，現場就不一定了"]]}, "K4": {"left": [["佩珊", "@老顏 擋下來？OK，我追下一條"], ["阿芳", "擋得好，我家那間要不要也查一下"]], "right": [["佩珊", "@老顏 明天頭版，標題我想好了"], ["宗翰", "我老闆要我連夜寫質詢稿了"]]}, "K5": {"left": [["家豪", "@老顏 懂事，名額照收"], ["志豪", "給業者錢，那我的房租補貼咧"]], "right": [["家豪", "@老顏 要查是吧，那我們不收了"], ["阿芳", "不收？我家的是要送去哪"]]}, "K6": {"left": [["阿芳", "@老顏 政府出就好，別又偷偷加在學費"], ["宜君", "裝好了，我上班像被當犯人"]], "right": [["阿芳", "@老顏 園所出？下學期學費直接漲給你看"], ["家豪", "我們出可以，學費多 500 喔"]]}, "K7": {"left": [["宗翰", "@老顏 道歉了，委員說報告會盯到底"], ["佩珊", "道歉稿我先截圖了"]], "right": [["宗翰", "@老顏 不道歉？委員要開記者會了喔"], ["佩珊", "記者會我會去，前排"]]}, "K8": {"left": [["阿芳", "@老顏 現在才加？我明天已經請假顧小孩了"], ["宜君", "加薪喔？那我先不轉行了"]], "right": [["阿芳", "@老顏 再忍？老闆要叫我不用來了"], ["宜君", "我同事上週已經去考公職了"]]}, "K9": {"left": [["宗翰", "@老顏 帳是好看了，選區家長罵翻"], ["阿芳", "砍補助？我尿布錢沒了"]], "right": [["宗翰", "@老顏 預算中心報告出來，又被拿去質詢"], ["志豪", "錢一直花，我繳的稅咧"]]}, "K12": {"left": [["阿芳", "@老顏 我家那間退出了，明年小孩去哪啦"], ["家豪", "辦不到，我們真的不簽了"]], "right": [["家豪", "@老顏 多兩年，總算排得過來"], ["阿芳", "兩年後學費是不是又要漲"]]}, "K13": {"left": [["宜君", "@老顏 終於不用看園長臉色申訴了"], ["詩涵", "有外人審，比較不會吃案"]], "right": [["宜君", "@老顏 陳情要寫園長名字，我是不用上班喔"], ["冠宇", "陳情又丟到縣市，案子我收"]]}, "K11": {"left": [["冠宇", "@老顏 中央扣錢，處長要翻桌了"], ["阿芳", "市府加碼的被收掉？那我少領欸"]], "right": [["冠宇", "@老顏 地方自己決定，帳也地方扛，很會"], ["志豪", "住哪個縣市差這麼多，好喔"]]}, "K10": {"left": [["詩涵", "@老顏 那個孩子明天終於能去上學了"], ["宜君", "來吧，我們班會照顧他"]], "right": [["詩涵", "@老顏 規定就是規定，孩子就繼續關在家"], ["阿芳", "換我也會選錢啊，真的"]]}};
 var AV = { "阿芳":"baby","家豪":"tie","宜君":"apron","志豪":"glasses","佩珊":"mic","冠宇":"file","詩涵":"sign","宗翰":"pin" };
 var OTHERS = ["俊傑","雅婷","建宏","怡君","承恩","佳穎","冠廷","婉婷","柏翰","欣怡","家銘","淑芬","彥廷","思妤","志明","美玲","俊宏","惠雯","信宏","筱涵","威廷"];
 var A = "assets/themes/bunny/";
@@ -430,7 +431,8 @@ function scrollDown(){ room.scrollTop = room.scrollHeight; }
 function addHTML(h){ var d=document.createElement("div"); d.innerHTML=h; while(d.firstChild) room.appendChild(d.firstChild); scrollDown(); }
 function say(name, text){
   var av = AV[name] ? 'style="background-image:url('+A+AV[name]+'.webp)"' : '';
-  addHTML('<div class="m"><div class="av" '+av+'></div><div><div class="nm">'+esc(name)+'</div><div class="row"><div class="b">'+esc(text)+'</div><div class="t">'+stamp()+'</div></div></div></div>');
+  var body = esc(text).replace(/^@老顏/, '<span class="at">@老顏</span>');
+  addHTML('<div class="m"><div class="av" '+av+'></div><div><div class="nm">'+esc(name)+'</div><div class="row"><div class="b">'+body+'</div><div class="t">'+stamp()+'</div></div></div></div>');
 }
 function news(name, text, id){
   addHTML('<div class="m"><div class="av" style="background-image:url('+A+AV[name]+'.webp)"></div><div><div class="nm">'+esc(name)+'</div><div class="row"><div class="link"><div class="img">'+(NEWS_ICON[id]||"📰")+'</div><div class="tx">'+esc(text)+'<small>新聞連結</small></div></div><div class="t">'+stamp()+'</div></div></div></div>');
@@ -514,16 +516,13 @@ function renderOrbs(){
   [["money",orbF],["patience",orbP]].forEach(function(p){ var v=Math.max(0,Math.min(100,state.values[p[0]]));
     p[1].querySelector(".lv").style.height = v+"%"; p[1].classList.toggle("danger", v<=20); });
 }
-function orbsHome(){ [orbF,orbP].forEach(function(o,i){ o.style.left="12px"; o.style.top=""; o.style.bottom=(i===0?"calc(84px + env(safe-area-inset-bottom))":"calc(18px + env(safe-area-inset-bottom))"); o.classList.remove("jump"); }); $("dim").classList.remove("on"); }
+function orbsHome(){ [orbF,orbP].forEach(function(o){ o.classList.remove("jump"); }); $("dim").classList.remove("on"); }
 function orbsFloat(side){
-  var app = $("app").getBoundingClientRect(), card = document.querySelector(".card");
-  var top = card ? card.getBoundingClientRect().top - app.top - 110 : 300;
   var fx = state.current[side].fx;
   [["money",orbF],["patience",orbP]].forEach(function(p,i){
     var o=p[1], amp = Math.abs(fx[p[0]]||0);
-    o.style.bottom=""; o.style.top = top+"px";
-    o.style.left = side==="left" ? (16+i*66)+"px" : (app.width-16-56-(1-i)*66)+"px";
-    o.style.setProperty("--h", Math.min(60, amp*4.5)+"px");
+    o.classList.remove("jump"); void o.offsetWidth;
+    o.style.setProperty("--h", Math.min(48, amp*3.6)+"px");
     o.classList.toggle("jump", amp>0);
   });
   $("dim").classList.add("on");
@@ -538,7 +537,7 @@ function drawCard(){
   $("yr").textContent = state.year;
   var L = LINES[c.id];
   if (L && L.pre) news(L.pre[0], L.pre[1], c.id);
-  var d = $("deck");
+  var d = $("slot");
   d.innerHTML = '<div class="card'+(c.kind==="event"?" ev":"")+'" id="card"><div class="lab l" id="labL">'+esc(c.left.label)+'</div><div class="lab r" id="labR">'+esc(c.right.label)+'</div>'
     + '<div class="who">'+esc(c.who)+'</div><div class="q">'+esc(c.q)+'</div><div class="art" style="background-image:url('+art(c)+')"></div>'
     + (state.playedCount===0?'<div class="hint">← 往左或往右滑 →</div>':'')+'</div>';
@@ -557,8 +556,8 @@ function commit(side){
   resolve(side);
   var L = LINES[c.id], lines = (L && L[side]) || [], flood = lines.length > 2;
   maybeBirth();
-  if (state.ending) { burst(lines, 300, function(){ setTimeout(death, 700); }); $("deck").innerHTML=""; return; }
-  if (!state.queue.length) { burst(lines, flood?260:400, function(){ setTimeout(reunion, 900); }); setTimeout(function(){ $("deck").innerHTML=""; },300); return; }
+  if (state.ending) { burst(lines, 300, function(){ setTimeout(death, 700); }); $("slot").innerHTML=""; return; }
+  if (!state.queue.length) { burst(lines, flood?260:400, function(){ setTimeout(reunion, 900); }); setTimeout(function(){ $("slot").innerHTML=""; },300); return; }
   burst(lines, flood?260:400);
   setTimeout(drawCard, flood ? 260*lines.length : 280);   /* 回話與下一張卡同時出現；洗版時等洗完 */
 }
@@ -568,7 +567,7 @@ function bindDrag(card){
   var startX=0, dx=0, down=false, shown=null;
   function setDrag(x){
     dx = x; var w = card.offsetWidth, ratio = Math.max(-1, Math.min(1, dx/(w*0.6)));
-    card.style.transform = "translateX("+(dx*0.6)+"px) rotate("+(ratio*12)+"deg)";
+    card.style.transform = "translateX("+(dx*0.35)+"px) rotate("+(ratio*8)+"deg)";
     $("labL").style.opacity = ratio<0 ? Math.min(1,-ratio*2) : 0;
     $("labR").style.opacity = ratio>0 ? Math.min(1, ratio*2) : 0;
     var s = Math.abs(ratio) > .12 ? (ratio<0?"left":"right") : null;
@@ -596,7 +595,7 @@ function death(){
   burst(d.flood, 260, function(){ setTimeout(function(){ sys(d.sys); setTimeout(reunion, 1600); }, 500); });
 }
 function reunion(){
-  orbF.classList.add("gone"); orbP.classList.add("gone");
+  $("orbs").classList.add("hidden");
   dateLine("2026 年・同學會"); state.year = "2026"; $("yr").textContent = "2026";
   if (state.ending) sys("阿芳 邀請 顏座 加入群組");
   var n = state.births.born;
@@ -611,8 +610,8 @@ function startGame(){
   state = freshState(); state.busy = true;
   room.innerHTML = ""; clock = { h: 20, m: rnd(0,20) };
   ann.list = ["畢業典禮那天的照片，記得補上傳"]; ann.i = 0; annShow(ann.list[0]); annStart();
-  $("start").classList.add("hidden"); $("endbar").classList.add("hidden"); $("deck").innerHTML = "";
-  orbF.classList.remove("gone"); orbP.classList.remove("gone"); renderOrbs(); orbsHome(); $("yr").textContent = "2018";
+  $("start").classList.add("hidden"); $("endbar").classList.add("hidden"); $("slot").innerHTML = "";
+  $("orbs").classList.remove("hidden"); renderOrbs(); orbsHome(); $("yr").textContent = "2018";
   dateLine("2018 年");
   burst(LINES.OPEN, 700, function(){ setTimeout(drawCard, 500); });
 }
