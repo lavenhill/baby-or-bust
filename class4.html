@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>我們這一班｜同學圈</title>
+<style>
+@font-face{font-family:Huninn;src:url(assets/fonts/huninn-1.woff2) format("woff2")}
+@font-face{font-family:Huninn;src:url(assets/fonts/huninn-2.woff2) format("woff2")}
+@font-face{font-family:Huninn;src:url(assets/fonts/huninn-3.woff2) format("woff2")}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#fff;font-family:Huninn,"PingFang TC","Noto Sans TC",sans-serif;color:#3c2d30;overflow:hidden}
+#app{max-width:440px;margin:0 auto;height:100%;display:flex;flex-direction:column;background:#fff}
+.top{padding:10px 14px 6px;font-size:22px;color:#f07896;border-bottom:1px solid #f6e3e8}
+.stories{display:flex;gap:12px;padding:10px 14px;border-bottom:1px solid #f6e3e8;overflow:hidden}
+.sto{width:58px;text-align:center;font-size:12px;flex:none}
+.ring{width:58px;height:58px;border-radius:50%;padding:3px;background:#f07896;transition:all .6s}
+.ring .in{width:100%;height:100%;border-radius:50%;background:#ffeef3;border:2px solid #fff;overflow:hidden;position:relative}
+.ring .bun{position:absolute;width:150%;left:-25%;top:16%}
+.sto.a1 .ring{background:#d9c6cb}
+.sto.a2 .ring{background:#e6e0e2}.sto.a2 .in{filter:grayscale(1);opacity:.6}
+.sto.gone .ring{background:none;border:2px dashed #d6b5be}.sto.gone .in{opacity:0}
+.sto.gone span{color:#bba}
+#feed{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;padding-bottom:40vh}
+.bun{padding-top:51.3%;background-size:100% auto;background-position:center;background-repeat:no-repeat}
+.post{border-bottom:1px solid #f6e3e8;padding-bottom:10px;animation:in .4s}
+@keyframes in{from{opacity:0;transform:translateY(16px)}}
+.ph{display:flex;align-items:center;gap:8px;padding:10px 12px}
+.av{width:32px;height:32px;border-radius:50%;background:#ffeef3;overflow:hidden;position:relative;flex:none}
+.av .bun{position:absolute;width:150%;left:-25%;top:16%}
+.ph .n{font-size:15px}.ph .y{font-size:12px;color:#b0959c;margin-left:auto}
+.img{position:relative;width:100%;padding-top:80%;overflow:hidden;user-select:none;-webkit-user-select:none}
+.img .bun.big{position:absolute;width:86%;left:7%;bottom:2%}
+.img .lab{position:absolute;left:50%;top:12%;transform:translateX(-50%);background:rgba(255,255,255,.92);border-radius:14px;padding:6px 14px;font-size:18px;white-space:nowrap}
+.img.gray{filter:grayscale(1) brightness(1.05)}
+.img .pop{position:absolute;left:50%;top:50%;font-size:90px;transform:translate(-50%,-50%) scale(0);transition:transform .25s;pointer-events:none}
+.img .pop.on{transform:translate(-50%,-50%) scale(1)}
+.group{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:0 2% 6%}
+.group .s{width:16.6%;position:relative}
+.group .s .t{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:11px;color:#7a6066}
+.group .s.empty .bun{opacity:0}
+.group .s.empty::after{content:"";position:absolute;left:12%;right:12%;top:-30%;bottom:0;border:2px dashed #d6a5b2;border-radius:12px}
+.acts{display:flex;align-items:center;gap:8px;padding:8px 12px 2px}
+.heart{border:0;background:none;padding:0;cursor:pointer;width:34px;height:34px}
+.heart svg{width:30px;height:30px;transition:transform .2s}
+.heart.on svg{transform:scale(1.15)}.heart.on path{fill:#f0506e;stroke:#f0506e}
+.likes{font-size:13px;color:#7a6066}
+.hint{font-size:12px;color:#d08a9a;margin-left:auto;animation:bl 1.4s infinite}
+@keyframes bl{50%{opacity:.35}}
+.cap{padding:2px 12px;font-size:15px;line-height:1.5}
+.cap b{font-weight:normal;margin-right:6px}
+.cmt{padding:2px 12px;font-size:14px;color:#6a565b}
+.cmt b{font-weight:normal;color:#3c2d30;margin-right:6px}
+.note{padding:2px 12px;font-size:12px;color:#b8a4a9}
+/* decision */
+.dec{margin:12px 10px;border-radius:20px;background:#fff6f8;border:2px solid #f5c8d4;padding:12px;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .3s,opacity .3s;animation:in .4s}
+.dec.boss{border-color:#f07896;background:#fff0f4}
+.dec .who{font-size:12px;color:#b0959c}
+.dec .q{font-size:18px;line-height:1.45;margin:6px 0 10px}
+.sides{display:flex;gap:8px}
+.side{flex:1;background:#fff;border-radius:14px;padding:10px;cursor:pointer;transition:background .2s,transform .2s}
+.side.hot{background:#ffd6e1;transform:scale(1.03)}
+.side .arr{font-size:12px;color:#d08a9a}
+.side .nm{display:flex;align-items:center;gap:6px;color:#f07896;font-size:16px;margin:4px 0}
+.side .nm .av{width:28px;height:28px}
+.side .t{font-size:14px;font-weight:bold;margin-bottom:4px}
+.side p{margin:0;font-size:13.5px;line-height:1.5;color:#5a474c}
+.done{font-size:14px;color:#a07882;text-align:center;padding:4px 0 0}
+.dec.chosen .sides{display:none}
+.endbox{text-align:center;padding:18px 16px}
+.endbox p{font-size:15px;line-height:1.6;color:#6a565b}
+.btn{background:#f07896;color:#fff;border:0;border-radius:22px;font:inherit;font-size:17px;padding:10px 26px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">同學圈</div>
+  <div class="stories" id="stories"></div>
+  <div id="feed"></div>
+</div>
+<script>
+var A='assets/themes/bunny/';
+var P={
+ '老顏':{acc:'glasses',bg:'#e7eefc'},
+ '阿芳':{acc:'baby',bg:'#ffdce6',end:'自己帶兩個，好累'},
+ '宜君':{acc:'apron',bg:'#ffe8d4',end:'保險業務，歡迎詢問'},
+ '家豪':{acc:'sign',bg:'#fff1c6',end:'園所頂讓中'},
+ '志豪':{acc:'tie',bg:'#dcecfb',end:'搬回老家'},
+ '詩涵':{acc:'sash',bg:'#e1f3e4',end:'已離職'}
+};
+var FRIENDS=['阿芳','宜君','家豪','志豪','詩涵'];
+var CARDS=[
+ {y:2018,who:'政務委員 林萬億',q:'公幼要蓋好幾年，先每月發 2,500 給家長？',
+  L:{p:['宜君'],t:'蓋公幼',d:'宜君在公幼當代理教保員，一年一聘。公幼多蓋，她才有機會考上正職。',
+     lose:[{n:'阿芳',lab:'公幼抽籤：未中',cap:'沒抽到。月子自己想辦法。'}],
+     win:[{n:'宜君',lab:'新公幼開班！',cap:'明年有缺了 @老顏 等你的公幼'}]},
+  R:{p:['阿芳'],t:'先發錢',d:'阿芳三個月後生，附近公幼抽不到。一個月 2,500，就是她的月子餐錢。',
+     lose:[{n:'宜君',lab:'明年見',cap:'代理約到期，明年再考一次。'}],
+     win:[{n:'阿芳',lab:'月子餐到貨',cap:'感謝政府❤️ @老顏 愛你'}]}},
+ {y:2019,who:'私幼業者',q:'我們壓低學費加入，條件是政府少來查。',
+  L:{p:['詩涵'],t:'要合作就得被查',d:'詩涵是社工，幼兒園出事都是她去收尾。少查一次，她的案子就多一件。',
+     lose:[{n:'家豪',lab:'少開一班',cap:'差 8 個孩子打平，撐看看。'}],
+     win:[{n:'詩涵',lab:'訪視表',cap:'這次有人先看過了 @老顏 謝謝'}]},
+  R:{p:['家豪'],t:'少查，馬上掛牌',d:'家豪的園今年差 8 個孩子才打平。加入就能招滿，不加入可能撐不過明年。',
+     lose:[{n:'詩涵',lab:'又一個',cap:'又一個案子。'}],
+     win:[{n:'家豪',lab:'掛牌啦！',cap:'招滿了 @老顏 下次來吃飯'}]}},
+ {y:2021,who:'執政黨立委',q:'育兒津貼從 3,500 加到 5,000？',
+  L:{p:['宜君'],t:'不加，錢給老師加薪',d:'宜君又沒考上正職。起薪留不住人，同事一個個走，她一個人顧一整班。',
+     lose:[{n:'志豪',lab:'租約續約',cap:'房東又漲。小孩再說。'}],
+     win:[{n:'宜君',lab:'再撐一年',cap:'薪水有希望了 @老顏'}]},
+  R:{p:['志豪'],t:'加',d:'志豪和女友在台北租屋，算過帳：每月多 1,500，才敢談生小孩。',
+     lose:[{n:'宜君',lab:'今天一個人',cap:'同事又走了一個。'}],
+     win:[{n:'志豪',lab:'她答應了💍',cap:'開始存奶粉錢 @老顏'}]}},
+ {y:2026,who:'立法委員',boss:1,q:'讀私幼每月補到 15,000，一年多 423 億。補不補？',
+  L:{p:['宜君','詩涵'],t:'不補，蓋平價園',d:'宜君要的是穩定的公幼缺；詩涵怕錢灌進私幼，又沒人去查。',
+     lose:[{n:'家豪',lab:'頂讓公告',cap:'十年的園，撐到這裡。'},{n:'阿芳',lab:'二寶學費單',cap:'第二個，再想想。'}],
+     win:[{n:'宜君',lab:'終於',cap:'這次你站對了 @老顏'}]},
+  R:{p:['家豪','阿芳'],t:'補！',d:'家豪的園靠補助才活得下去；阿芳想生第二胎，一萬五剛好付掉大半學費。',
+     lose:[{n:'宜君',lab:'新名片',cap:'轉行了。'},{n:'詩涵',lab:'最後一天',cap:'案子交接完了。'}],
+     win:[{n:'阿芳',lab:'一萬五入袋！',cap:'二寶可以來了 @老顏'}]}}
+];
+var S;
+function $(i){return document.getElementById(i)}
+function bun(acc,cls){return '<div class="bun'+(cls?' '+cls:'')+'" style="background-image:url('+A+acc+'.webp)"></div>'}
+function av(n){return '<div class="av">'+bun(P[n].acc)+'</div>'}
+var HEART='<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.3 3 4.5 6.6 4.5c2.1 0 3.6 1.2 4.4 2.6.8-1.4 2.3-2.6 4.4-2.6 3.6 0 5.7 3.8 4.2 7.3C19.5 16.4 12 21 12 21z" fill="none" stroke="#3c2d30" stroke-width="1.8"/></svg>';
+function stories(){
+  $('stories').innerHTML=FRIENDS.map(function(n){var a=S.ab[n],c='sto'+(S.gone===n?' gone':a>=2?' a2':a==1?' a1':'');
+    return '<div class="'+c+'"><div class="ring"><div class="in">'+bun(P[n].acc)+'</div></div><span>'+n+'</span></div>'}).join('');
+}
+function groupPhoto(missing){
+  return '<div class="group">'+['阿芳','宜君','老顏','家豪','志豪','詩涵'].map(function(n){return '<div class="s'+(n===missing?' empty':'')+'">'+bun(P[n].acc)+'<div class="t">'+(n===missing?'':n)+'</div></div>'}).join('')+'</div>';
+}
+function add(el){$('feed').appendChild(el);setTimeout(function(){var f=$('feed');f.scrollTop=el.offsetTop-$('feed').offsetTop-8},60);return el}
+function post(o){ // o:{n,y,lab,cap,gray,group,missing,likes,cmts,note,then}
+  var el=document.createElement('div');el.className='post';
+  var img=o.group?groupPhoto(o.missing):bun(P[o.n].acc,'big')+(o.lab?'<div class="lab">'+o.lab+'</div>':'');
+  el.innerHTML='<div class="ph">'+av(o.n)+'<span class="n">'+o.n+'</span><span class="y">'+o.y+'</span></div>'+
+   '<div class="img'+(o.gray?' gray':'')+'" style="background:'+(o.group?'#fff4ec':P[o.n].bg)+'">'+img+'<div class="pop">❤️</div></div>'+
+   '<div class="acts"><button class="heart" aria-label="讚">'+HEART+'</button><span class="likes">'+(o.likes||0)+' 個讚</span>'+(o.then?'<span class="hint">按愛心繼續</span>':'')+'</div>'+
+   '<div class="cap"><b>'+o.n+'</b>'+o.cap+'</div>'+(o.cmts||[]).map(function(c){return '<div class="cmt"><b>'+c[0]+'</b>'+c[1]+'</div>'}).join('')+'<div class="note"></div>';
+  var h=el.querySelector('.heart'),liked=false,pop=el.querySelector('.pop');
+  function like(){if(liked)return;liked=true;h.classList.add('on');el.querySelector('.likes').textContent=((o.likes||0)+1)+' 個讚';
+    var hint=el.querySelector('.hint');if(hint)hint.remove();
+    pop.classList.add('on');setTimeout(function(){pop.classList.remove('on')},500);
+    if(o.cold)setTimeout(function(){el.querySelector('.note').textContent=o.n+' 看過了，沒有回讚'},700);
+    if(o.then)setTimeout(o.then,o.cold?1500:650)}
+  h.onclick=like;
+  var last=0;el.querySelector('.img').addEventListener('click',function(){var t=Date.now();if(t-last<350)like();last=t});
+  return add(el);
+}
+function decision(i){
+  var c=CARDS[i],el=document.createElement('div');el.className='dec'+(c.boss?' boss':'');
+  function side(k,s){return '<div class="side" data-s="'+k+'"><div class="arr">'+(k=='L'?'← 往左':'往右 →')+'</div><div class="nm">'+s.p.map(av).join('')+s.p.join('＋')+'</div><div class="t">'+s.t+'</div><p>'+s.d+'</p></div>'}
+  el.innerHTML='<div class="who">'+c.y+'｜'+c.who+'</div><div class="q">「'+c.q+'」</div><div class="sides">'+side('L',c.L)+side('R',c.R)+'</div>';
+  add(el);
+  var sides=el.querySelectorAll('.side'),x0=null,y0=0,dx=0,drag=false,done=false;
+  sides.forEach(function(s){s.onclick=function(){if(!drag)pick(s.dataset.s)}});
+  el.addEventListener('pointerdown',function(e){x0=e.clientX;y0=e.clientY;dx=0;drag=false});
+  el.addEventListener('pointermove',function(e){if(x0===null||done)return;dx=e.clientX-x0;if(!drag&&Math.abs(dx)>12&&Math.abs(dx)>Math.abs(e.clientY-y0)){drag=true}
+    if(drag){el.style.transition='none';el.style.transform='translateX('+dx*.6+'px) rotate('+dx/40+'deg)';sides[0].classList.toggle('hot',dx<-40);sides[1].classList.toggle('hot',dx>40)}});
+  function up(){if(x0===null)return;x0=null;el.style.transition='';if(drag&&Math.abs(dx)>90)pick(dx<0?'L':'R');else{el.style.transform='';sides[0].classList.remove('hot');sides[1].classList.remove('hot')}setTimeout(function(){drag=false},50)}
+  el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+  function pick(k){if(done)return;done=true;var w=c[k],l=c[k=='L'?'R':'L'];
+    el.style.transform='';el.classList.add('chosen');
+    el.insertAdjacentHTML('beforeend','<div class="done">你站在 '+w.p.join('、')+' 這邊</div>');
+    l.p.forEach(function(n){S.ab[n]++;S.last[n]=i});
+    stories();
+    var q=w.lose.map(function(x){return {n:x.n,y:c.y,lab:x.lab,cap:x.cap,gray:1,cold:1,likes:3+(x.n.length)}}).concat(w.win.map(function(x){return {n:x.n,y:c.y,lab:x.lab,cap:x.cap,likes:12}}));
+    chain(q,function(){i+1<CARDS.length?decision(i+1):reunion()});
+  }
+}
+function chain(list,fin){var k=0;(function next(){if(k>=list.length)return fin();var o=list[k++];o.then=next;setTimeout(function(){post(o)},k==1?350:0)})()}
+function reunion(){
+  var max=-1,who=null;FRIENDS.forEach(function(n){if(S.ab[n]>max||(S.ab[n]==max&&S.last[n]>S.last[who])){max=S.ab[n];who=n}});
+  S.gone=who;stories();
+  var host=who==='阿芳'?'家豪':'阿芳';
+  setTimeout(function(){
+    post({n:host,y:2026,group:1,missing:who,likes:18,cap:'2026 同學會。十年了，少了一個。',cmts:[['志豪','好久不見！'],['系統',who+'：'+P[who].end],['系統',who+' 已取消追蹤你']],then:end});
+  },600);
+}
+function end(){
+  var who=S.gone,el=document.createElement('div');el.className='endbox';
+  el.innerHTML='<p>這四年，你放棄 '+who+' '+S.ab[who]+' 次。<br>合照裡那個空位，是'+who+'的。</p><button class="btn">再玩一次</button>';
+  add(el);el.querySelector('.btn').onclick=start;
+}
+function start(){
+  S={ab:{},last:{},gone:null};FRIENDS.forEach(function(n){S.ab[n]=0;S.last[n]=-1});
+  $('feed').innerHTML='';stories();
+  post({n:'阿芳',y:2018,group:1,likes:24,cap:'老顏進少子女化辦公室了！以後我們的小孩靠你了🙏',cmts:[['家豪','顏座好'],['宜君','恭喜～']],then:function(){decision(0)}});
+}
+start();
+window.__S=function(){return S};
+</script>
+</body>
+</html>
