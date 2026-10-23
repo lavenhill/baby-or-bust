@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>我們這一班｜同學圈</title>
+<style>
+@font-face{font-family:Huninn;src:url(assets/fonts/huninn-1.woff2) format("woff2")}
+@font-face{font-family:Huninn;src:url(assets/fonts/huninn-2.woff2) format("woff2")}
+@font-face{font-family:Huninn;src:url(assets/fonts/huninn-3.woff2) format("woff2")}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#fff;font-family:Huninn,"PingFang TC","Noto Sans TC",sans-serif;color:#3c2d30;overflow:hidden}
+#app{max-width:440px;margin:0 auto;height:100%;display:flex;flex-direction:column;background:#fff;position:relative;overflow:hidden;overflow:clip}
+.top{padding:10px 14px 6px;font-size:22px;color:#f07896;border-bottom:1px solid #f6e3e8}
+.stories{display:flex;gap:12px;padding:10px 14px 8px;border-bottom:1px solid #f6e3e8;overflow:hidden}
+.sto{width:58px;text-align:center;font-size:12px;flex:none;cursor:pointer;transition:transform .3s}
+.ring{width:58px;height:58px;border-radius:50%;padding:3px;background:#f07896;transition:all .6s}
+.ring .in{width:100%;height:100%;border-radius:50%;background:#ffeef3;border:2px solid #fff;overflow:hidden;position:relative}
+.ring .bun{position:absolute;width:150%;left:-25%;top:16%}
+.sto.live{transform:translateY(-2px)}
+.sto.live .ring{background:conic-gradient(#f07896,#ffb36b,#f07896);animation:spin 1.6s linear infinite}
+.sto.live .in{animation:spin 1.6s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sto.a1 .ring{background:#d9c6cb}.sto.a1 .in{filter:grayscale(1)}
+.sto.gone .ring{background:none;border:2px dashed #d6b5be}.sto.gone .in{opacity:0}
+.sto.gone span{color:#bba}
+#feed{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:45vh}
+.bun{padding-top:51.3%;background-size:100% auto;background-position:center;background-repeat:no-repeat}
+.post{border-bottom:1px solid #f6e3e8;padding-bottom:10px;animation:in .4s}
+@keyframes in{from{opacity:0;transform:translateY(16px)}}
+.ph{display:flex;align-items:center;gap:8px;padding:10px 12px}
+.av{width:32px;height:32px;border-radius:50%;background:#ffeef3;overflow:hidden;position:relative;flex:none}
+.av .bun{position:absolute;width:150%;left:-25%;top:16%}
+.ph .n{font-size:15px}.ph .y{font-size:12px;color:#b0959c;margin-left:auto}
+.img{position:relative;width:100%;padding-top:80%;overflow:hidden;user-select:none;-webkit-user-select:none;background-size:cover;background-position:center}
+.img.wide{padding-top:56%}
+.img .bun.big{position:absolute;width:86%;left:7%;bottom:2%}
+.img .lab{position:absolute;left:50%;top:12%;transform:translateX(-50%);background:rgba(255,255,255,.92);border-radius:14px;padding:6px 14px;font-size:18px;white-space:nowrap}
+.img.gray{filter:grayscale(1) brightness(1.05)}
+.img .pop{position:absolute;left:50%;top:50%;font-size:90px;transform:translate(-50%,-50%) scale(0);transition:transform .25s;pointer-events:none}
+.img .pop.on{transform:translate(-50%,-50%) scale(1)}
+.group{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:center;padding:0 1% 2%}
+.group .s{width:16.6%;position:relative}
+.group .s .t{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:11px;color:#5a3a42;text-shadow:0 0 3px #fff,0 0 3px #fff}
+.group .s.empty .bun{opacity:0}
+.group .s.empty{cursor:pointer}
+.group .s.empty::after{content:"?";display:flex;align-items:center;justify-content:center;color:#c98a9b;font-size:20px;position:absolute;left:14%;right:14%;top:-20%;bottom:8%;border:2px dashed #e8a5b6;border-radius:14px;background:rgba(255,255,255,.35)}
+.acts{display:flex;align-items:center;gap:8px;padding:8px 12px 2px}
+.heart{border:0;background:none;padding:0;cursor:pointer;width:34px;height:34px}
+.heart svg{width:30px;height:30px;transition:transform .2s}
+.heart.on svg{transform:scale(1.15)}.heart.on path{fill:#f0506e;stroke:#f0506e}
+.likes{font-size:13px;color:#7a6066;display:flex;align-items:center;gap:4px}
+.likes .av{width:20px;height:20px;margin-right:-8px;border:1.5px solid #fff}
+.likes .av:last-of-type{margin-right:4px}
+.hint{font-size:12px;color:#d08a9a;margin-left:auto;animation:bl 1.4s infinite}
+@keyframes bl{50%{opacity:.35}}
+.cap{padding:2px 12px;font-size:15px;line-height:1.5}
+.cap b{font-weight:normal;margin-right:6px}
+.cmt{padding:2px 12px;font-size:14px;color:#6a565b}
+.cmt b{font-weight:normal;color:#3c2d30;margin-right:6px}
+.note{padding:2px 12px;font-size:12px;color:#b8a4a9}
+.yr{display:flex;align-items:center;gap:10px;color:#d08a9a;font-size:15px;padding:16px 20px 6px;animation:in .4s}
+.yr::before,.yr::after{content:"";flex:1;height:1px;background:#f3cdd7}
+/* decision */
+.dec{margin:12px 10px;border-radius:20px;background:#fff6f8;border:2px solid #f5c8d4;padding:12px;touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .3s,opacity .3s;animation:in .4s}
+.dec.boss{border-color:#f07896;background:#fff0f4}
+.dec .who{font-size:12px;color:#b0959c}
+.dec .q{font-size:18px;line-height:1.45;margin:6px 0 4px}
+.dec .tip{font-size:12px;color:#c79aa6;margin-bottom:8px}
+.sides{display:flex;gap:8px}
+.side{flex:1;background:#fff;border-radius:14px;padding:10px;cursor:pointer;transition:background .2s,transform .2s;position:relative}
+.side.hot{background:#ffd6e1;transform:scale(1.03)}
+.side .arr{font-size:12px;color:#d08a9a}
+.side .prev{position:absolute;right:8px;top:8px;font-size:11px;background:#f3e6ea;color:#9c7a84;border-radius:8px;padding:1px 6px}
+.side .nm{display:flex;align-items:center;gap:6px;color:#f07896;font-size:16px;margin:4px 0}
+.side .nm .av{width:28px;height:28px}
+.side .t{font-size:14px;font-weight:bold;margin-bottom:4px}
+.side p{margin:0;font-size:13.5px;line-height:1.5;color:#5a474c}
+.done{font-size:14px;color:#a07882;text-align:center;padding:4px 0 0}
+.dec.chosen .sides,.dec.chosen .tip{display:none}
+.endbox{text-align:center;padding:18px 16px}
+.endbox p{font-size:15px;line-height:1.6;color:#6a565b}
+.btn{background:#f07896;color:#fff;border:0;border-radius:22px;font:inherit;font-size:17px;padding:10px 26px;cursor:pointer}
+/* profile sheet */
+#mask{position:absolute;inset:0;background:rgba(60,45,48,.35);opacity:0;pointer-events:none;transition:opacity .25s;z-index:5}
+#mask.on{opacity:1;pointer-events:auto}
+#sheet{position:absolute;left:0;right:0;bottom:0;max-height:78%;background:#fff;border-radius:22px 22px 0 0;transform:translateY(105%);visibility:hidden;transition:transform .3s,visibility 0s .3s;z-index:6;display:flex;flex-direction:column}
+#sheet.on{transform:none;visibility:visible;transition:transform .3s}
+#sheet .grab{width:44px;height:5px;border-radius:3px;background:#ecd3da;margin:8px auto 4px}
+#sheet .x{position:absolute;right:12px;top:8px;border:0;background:none;font-size:22px;color:#b0959c;cursor:pointer}
+.pf{display:flex;align-items:center;gap:14px;padding:8px 18px 10px}
+.pf .av{width:72px;height:72px}
+.pf .nm{font-size:20px}.pf .bio{font-size:13.5px;color:#7a6066;margin-top:3px;line-height:1.45}
+.pf .bio.bad{color:#b56b7e}
+.pf .cnt{font-size:12px;color:#b0959c;margin-top:3px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;overflow-y:auto;padding-bottom:14px}
+.grid .g{position:relative;padding-top:100%;overflow:hidden}
+.grid .g .bun{position:absolute;width:96%;left:2%;bottom:0}
+.grid .g .gl{position:absolute;left:4px;right:4px;top:6px;font-size:11px;text-align:center;background:rgba(255,255,255,.9);border-radius:8px;padding:2px}
+.grid .g.gray{filter:grayscale(1)}
+.grid .g.ph2{background-size:cover;background-position:center}
+.empty-g{padding:20px;text-align:center;color:#b8a4a9;font-size:13px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">同學圈</div>
+  <div class="stories" id="stories"></div>
+  <div id="feed"></div>
+  <div id="mask"></div>
+  <div id="sheet"><div class="grab"></div><button class="x" aria-label="關閉">×</button><div id="pfbody"></div></div>
+</div>
+<script>
+var A='assets/themes/bunny/',IMG='assets/class/';
+var P={
+ '老顏':{acc:'glasses',bg:'#e7eefc'},
+ '阿芳':{acc:'baby',bg:'#ffdce6',bio:'準媽媽｜月子餐研究中',end:'自己帶兩個，好累'},
+ '宜君':{acc:'apron',bg:'#ffe8d4',bio:'代理教保員｜一年一聘',end:'保險業務，歡迎詢問'},
+ '家豪':{acc:'sign',bg:'#fff1c6',bio:'小星星幼兒園 園長',end:'園所頂讓中'},
+ '志豪':{acc:'tie',bg:'#dcecfb',bio:'台北租屋族｜存錢中',end:'搬回老家了'},
+ '詩涵':{acc:'sash',bg:'#e1f3e4',bio:'兒少保護社工',end:'已離職'}
+};
+var FRIENDS=['阿芳','宜君','家豪','志豪','詩涵'];
+var CARDS=[
+ {y:2018,who:'政務委員 林萬億',q:'公幼要蓋好幾年，先每月發 2,500 給家長？',
+  L:{p:['宜君'],t:'蓋公幼',d:'宜君在公幼當代理教保員，一年一聘。公幼多蓋，她才有機會考上正職。',
+     lose:[{n:'阿芳',lab:'公幼抽籤：未中',cap:'沒抽到。月子自己想辦法。'}],
+     win:[{n:'宜君',lab:'新公幼開班！',cap:'明年有缺了 @老顏 等你的公幼'}]},
+  R:{p:['阿芳'],t:'先發錢',d:'阿芳三個月後生，附近公幼抽不到。一個月 2,500，就是她的月子餐錢。',
+     lose:[{n:'宜君',lab:'明年見',cap:'代理約到期，明年再考一次。'}],
+     win:[{n:'阿芳',lab:'月子餐到貨',cap:'感謝政府❤️ @老顏 愛你'}]}},
+ {y:2019,who:'私幼業者',q:'我們壓低學費加入，條件是政府少來查。',
+  L:{p:['詩涵'],t:'要合作就得被查',d:'詩涵是社工，幼兒園出事都是她去收尾。少查一次，她的案子就多一件。',
+     lose:[{n:'家豪',lab:'少開一班',cap:'差 8 個孩子打平，撐看看。'}],
+     win:[{n:'詩涵',lab:'訪視表',cap:'這次有人先看過了 @老顏 謝謝'}]},
+  R:{p:['家豪'],t:'少查，馬上掛牌',d:'家豪的園今年差 8 個孩子才打平。加入就能招滿，不加入可能撐不過明年。',
+     lose:[{n:'詩涵',lab:'又一個',cap:'又一個案子。'}],
+     win:[{n:'家豪',lab:'掛牌啦！',cap:'招滿了 @老顏 下次來吃飯'}]}},
+ {y:2021,who:'執政黨立委',q:'育兒津貼從 3,500 加到 5,000？',
+  L:{p:['宜君'],t:'不加，錢給老師加薪',d:'宜君又沒考上正職。起薪留不住人，同事一個個走，她一個人顧一整班。',
+     lose:[{n:'志豪',lab:'租約續約',cap:'房東又漲。小孩再說。'}],
+     win:[{n:'宜君',lab:'再撐一年',cap:'薪水有希望了 @老顏'}]},
+  R:{p:['志豪'],t:'加',d:'志豪和女友在台北租屋，算過帳：每月多 1,500，才敢談生小孩。',
+     lose:[{n:'宜君',lab:'今天一個人',cap:'同事又走了一個。'}],
+     win:[{n:'志豪',lab:'她答應了💍',cap:'開始存奶粉錢 @老顏'}]}},
+ {y:2022,who:'內政部',q:'租金補貼一年 300 億，新婚、有小孩的再加碼？',
+  L:{p:['詩涵'],t:'不加碼，錢拿去蓋社宅',d:'詩涵手上的個案，被房東趕出來就沒地方住。補貼很快被房租吃掉，社宅才住得久。',
+     lose:[{n:'志豪',lab:'房租又漲 3,000',cap:'補貼還沒到，房東先漲了。'}],
+     win:[{n:'詩涵',lab:'抽到社宅了',cap:'個案一家終於有地方住 @老顏'}]},
+  R:{p:['志豪'],t:'加碼給新婚、有小孩的',d:'志豪剛結婚，太太懷孕。每月多幾千，才付得起有兩房的房租。',
+     lose:[{n:'詩涵',lab:'等候名單 #812',cap:'社宅排不到。今晚又在找床位。'}],
+     win:[{n:'志豪',lab:'換到兩房了',cap:'嬰兒床放得下了 @老顏'}]}},
+ {y:2026,who:'立法委員',boss:1,q:'讀私幼每月補到 15,000，一年多 423 億。補不補？',
+  L:{p:['宜君','詩涵'],t:'不補，蓋平價園',d:'宜君要的是穩定的公幼缺；詩涵怕錢灌進私幼，又沒人去查。',
+     lose:[{n:'家豪',lab:'頂讓公告',cap:'十年的園，撐到這裡。'},{n:'阿芳',lab:'二寶學費單',cap:'第二個，再想想。'}],
+     win:[{n:'宜君',lab:'終於',cap:'這次你站對了 @老顏'}]},
+  R:{p:['家豪','阿芳'],t:'補！',d:'家豪的園靠補助才活得下去；阿芳想生第二胎，一萬五剛好付掉大半學費。',
+     lose:[{n:'宜君',lab:'新名片',cap:'轉行了。'},{n:'詩涵',lab:'最後一天',cap:'案子交接完了。'}],
+     win:[{n:'阿芳',lab:'一萬五入袋！',cap:'二寶可以來了 @老顏'}]}}
+];
+// 老顏自己的日常（每張卡後）
+var MINE=['第一份簡報，被長官退了三次。','加班到十點，超商店員都認得我了。','視訊會議開到耳朵痛。','升官了？只是換了一張桌子。'];
+var BIRTH={
+ '阿芳':{lab:'歡迎來到地球 3,120g',cap:'老大出生了！'},
+ '宜君':{lab:'哈囉寶貝',cap:'我也當媽媽了，誰想得到。'},
+ '家豪':{lab:'園長的小孩',cap:'終於輪到我自己的。'},
+ '志豪':{lab:'2,980g',cap:'爸爸今天開始上班。'},
+ '詩涵':{lab:'小小的手',cap:'看過那麼多孩子，這是我的。'}
+};
+var S,PREV=null;
+function $(i){return document.getElementById(i)}
+function bun(acc,cls){return '<div class="bun'+(cls?' '+cls:'')+'" style="background-image:url('+A+acc+'.webp)"></div>'}
+function av(n){return '<div class="av">'+bun(P[n].acc)+'</div>'}
+var HEART='<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.3 3 4.5 6.6 4.5c2.1 0 3.6 1.2 4.4 2.6.8-1.4 2.3-2.6 4.4-2.6 3.6 0 5.7 3.8 4.2 7.3C19.5 16.4 12 21 12 21z" fill="none" stroke="#3c2d30" stroke-width="1.8"/></svg>';
+function stories(){
+  $('stories').innerHTML=FRIENDS.map(function(n){var a=S.ab[n],c='sto'+(a>=2?' gone':a==1?' a1':'')+(S.live.indexOf(n)>=0&&a<2?' live':'');
+    return '<div class="'+c+'" data-n="'+n+'"><div class="ring"><div class="in">'+bun(P[n].acc)+'</div></div><span>'+n+'</span></div>'}).join('');
+  $('stories').querySelectorAll('.sto').forEach(function(s){s.onclick=function(){profile(s.dataset.n)}});
+}
+// ---- 個人頁抽屜 ----
+function bio(n){var a=S.ab[n];return a>=2?{t:P[n].end+'｜已取消追蹤你',bad:1}:{t:P[n].bio}}
+function profile(n){
+  var b=bio(n),ps=S.posts[n];
+  $('pfbody').innerHTML='<div class="pf">'+av(n)+'<div><div class="nm">'+n+'</div><div class="bio'+(b.bad?' bad':'')+'">'+b.t+'</div><div class="cnt">'+ps.length+' 則貼文</div></div></div>'+
+   (ps.length?'<div class="grid">'+ps.slice().reverse().map(function(p){
+     if(p.photo)return '<div class="g ph2" style="background-image:url('+IMG+p.photo+')"></div>';
+     return '<div class="g'+(p.gray?' gray':'')+'" style="background:'+P[n].bg+'">'+bun(p.acc||P[n].acc)+(p.lab?'<div class="gl">'+p.lab+'</div>':'')+'</div>'}).join('')+'</div>':'<div class="empty-g">還沒有貼文</div>');
+  $('mask').classList.add('on');$('sheet').classList.add('on');
+}
+function closeSheet(){$('mask').classList.remove('on');$('sheet').classList.remove('on')}
+$('mask').onclick=closeSheet;document.querySelector('#sheet .x').onclick=closeSheet;
+(function(){var y0=null;var sh=$('sheet');sh.addEventListener('touchstart',function(e){y0=e.touches[0].clientY},{passive:true});
+ sh.addEventListener('touchend',function(e){if(y0!==null&&e.changedTouches[0].clientY-y0>70)closeSheet();y0=null})})();
+// ---- 動態 ----
+function scrollTo(el){setTimeout(function(){var f=$('feed');var t=el.offsetTop-f.offsetTop-8;if(f.scrollTo)f.scrollTo({top:t,behavior:'smooth'});else f.scrollTop=t},60)}
+function add(el){$('feed').appendChild(el);scrollTo(el);return el}
+function year(y){if(S.year===y)return;S.year=y;var el=document.createElement('div');el.className='yr';el.textContent=y;$('feed').appendChild(el)}
+function groupPhoto(missing){
+  return '<div class="group">'+['阿芳','宜君','老顏','家豪','志豪','詩涵'].map(function(n){var e=missing.indexOf(n)>=0;return '<div class="s'+(e?' empty':'')+'" data-n="'+n+'">'+bun(P[n].acc)+'<div class="t">'+(e?'':n)+'</div></div>'}).join('')+'</div>';
+}
+function post(o){ // o:{n,y,lab,cap,gray,photo,group,missing,likers,likes,cmts,cold,acc,then}
+  year(o.y);
+  if(o.n!=='老顏')S.posts[o.n].push({lab:o.lab,gray:o.gray,photo:o.photo,acc:o.acc});
+  var el=document.createElement('div');el.className='post';
+  var bg=o.photo?'background-image:url('+IMG+o.photo+')':'background:'+P[o.n].bg;
+  var img=o.photo?(o.group?groupPhoto(o.missing||[]):''):bun(o.acc||P[o.n].acc,'big')+(o.lab?'<div class="lab">'+o.lab+'</div>':'');
+  var lk=o.likers?(o.likers.length?o.likers.map(av).join('')+'<span>'+o.likers.join('、')+' 說讚</span>':'<span>還沒有人說讚</span>'):'<span>'+(o.likes||0)+' 個讚</span>';
+  el.innerHTML='<div class="ph">'+av(o.n)+'<span class="n">'+o.n+'</span><span class="y">'+o.y+'</span></div>'+
+   '<div class="img'+(o.photo?' wide':'')+(o.gray?' gray':'')+'" style="'+bg+'">'+img+'<div class="pop">❤️</div></div>'+
+   '<div class="acts"><button class="heart" aria-label="讚">'+HEART+'</button><span class="likes">'+lk+'</span>'+(o.then?'<span class="hint">按愛心繼續</span>':'')+'</div>'+
+   '<div class="cap"><b>'+o.n+'</b>'+o.cap+'</div>'+(o.cmts||[]).map(function(c){return '<div class="cmt"><b>'+c[0]+'</b>'+c[1]+'</div>'}).join('')+'<div class="note"></div>';
+  var h=el.querySelector('.heart'),liked=false,pop=el.querySelector('.pop');
+  function like(){if(liked)return;liked=true;h.classList.add('on');
+    if(!o.likers)el.querySelector('.likes').innerHTML='<span>'+((o.likes||0)+1)+' 個讚</span>';
+    var hint=el.querySelector('.hint');if(hint)hint.remove();
+    pop.classList.add('on');setTimeout(function(){pop.classList.remove('on')},500);
+    if(o.cold)setTimeout(function(){el.querySelector('.note').textContent=o.n+' 看過了，沒有回讚'},700);
+    if(o.then)setTimeout(o.then,o.cold?1500:650)}
+  h.onclick=like;
+  var last=0;el.querySelector('.img').addEventListener('click',function(e){
+    var s=e.target.closest&&e.target.closest('.s.empty');if(s){absent(s.dataset.n);return}
+    var t=Date.now();if(t-last<350)like();last=t});
+  return add(el);
+}
+// ---- 抉擇卡（牆） ----
+function decision(i){
+  var c=CARDS[i];year(c.y);
+  S.live=c.L.p.concat(c.R.p);stories();
+  var el=document.createElement('div');el.className='dec'+(c.boss?' boss':'');
+  var pv=PREV&&PREV[i];
+  function side(k,s){return '<div class="side" data-s="'+k+'"><div class="arr">'+(k=='L'?'← 往左':'往右 →')+'</div>'+(pv===k?'<span class="prev">上次選這個</span>':'')+'<div class="nm">'+s.p.map(av).join('')+s.p.join('＋')+'</div><div class="t">'+s.t+'</div><p>'+s.d+'</p></div>'}
+  el.innerHTML='<div class="who">'+c.y+'｜'+c.who+'</div><div class="q">「'+c.q+'」</div><div class="tip">點上方發亮的頭像，看看他們這幾年</div><div class="sides">'+side('L',c.L)+side('R',c.R)+'</div>';
+  add(el);
+  var sides=el.querySelectorAll('.side'),feed=$('feed'),x0=null,y0=0,ly=0,dx=0,axis=null,done=false;
+  sides.forEach(function(s){s.onclick=function(){if(!axis)pick(s.dataset.s)}});
+  // touch-action:none：自己判定方向。橫滑時整頁不動；直滑時手動捲動
+  el.addEventListener('pointerdown',function(e){if(done)return;x0=e.clientX;y0=ly=e.clientY;dx=0;axis=null});
+  el.addEventListener('pointermove',function(e){if(x0===null||done)return;dx=e.clientX-x0;var dy=e.clientY-y0;
+    if(!axis&&(Math.abs(dx)>10||Math.abs(dy)>10))axis=Math.abs(dx)>Math.abs(dy)?'x':'y';
+    if(axis==='x'){el.style.transition='none';el.style.transform='translateX('+dx*.6+'px) rotate('+dx/40+'deg)';sides[0].classList.toggle('hot',dx<-40);sides[1].classList.toggle('hot',dx>40)}
+    else if(axis==='y'){feed.scrollTop-=e.clientY-ly}
+    ly=e.clientY});
+  function up(){if(x0===null)return;x0=null;el.style.transition='';
+    if(axis==='x'&&Math.abs(dx)>90)pick(dx<0?'L':'R');else{el.style.transform='';sides[0].classList.remove('hot');sides[1].classList.remove('hot')}
+    setTimeout(function(){axis=null},50)}
+  el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+  function pick(k){if(done)return;done=true;S.choice[i]=k;var w=c[k],l=c[k=='L'?'R':'L'];
+    el.style.transform='';el.classList.add('chosen');
+    el.insertAdjacentHTML('beforeend','<div class="done">你站在 '+w.p.join('、')+' 這邊</div>');
+    l.p.forEach(function(n){S.ab[n]++;S.last[n]=i});
+    S.live=[];stories();
+    var q=w.lose.map(function(x){return {n:x.n,y:c.y,lab:x.lab,cap:x.cap,gray:1,cold:1,likes:3+x.n.length}})
+      .concat(w.win.map(function(x){return {n:x.n,y:c.y,lab:x.lab,cap:x.cap,likes:12}}));
+    if(i<MINE.length)q.push({n:'老顏',y:c.y,cap:MINE[i],likers:FRIENDS.filter(function(n){return S.ab[n]==0})});
+    var b=births(i);if(b)q.push(b);
+    chain(q,function(){i+1<CARDS.length?decision(i+1):reunion()});
+  }
+}
+// 生小孩直接是動態：阿芳 2019 固定；2023 從還沒被放棄的人裡抽一位（可能沒有）
+function births(i){
+  if(i===1)return {n:'阿芳',y:2019,acc:'baby',lab:BIRTH['阿芳'].lab,cap:BIRTH['阿芳'].cap,likes:31};
+  if(i===3){var ok=FRIENDS.filter(function(n){return n!=='阿芳'&&S.ab[n]==0});if(!ok.length)return null;
+    var n=ok[Math.floor(Math.random()*ok.length)];return {n:n,y:2023,acc:'baby',lab:BIRTH[n].lab,cap:BIRTH[n].cap,likes:27}}
+  return null;
+}
+function chain(list,fin){var k=0;(function next(){if(k>=list.length)return fin();var o=list[k++];o.then=next;setTimeout(function(){post(o)},k==1?350:0)})()}
+// ---- 同學會：被放棄 2 次以上的人不來；至少少一個 ----
+function reunion(){
+  var miss=FRIENDS.filter(function(n){return S.ab[n]>=2});
+  if(!miss.length){var max=-1,who=null;FRIENDS.forEach(function(n){if(S.ab[n]>max||(S.ab[n]==max&&S.last[n]>S.last[who])){max=S.ab[n];who=n}});miss=[who]}
+  S.gone=miss;S.live=[];stories();
+  var host=FRIENDS.filter(function(n){return miss.indexOf(n)<0})[0]||'老顏';
+  var cnt=['','一個','兩個','三個','四個','五個'][miss.length];
+  var cm=[['老顏','（點空位，看看他們去哪了）']];
+  setTimeout(function(){
+    post({n:host,y:2026,photo:'reunion-bg.webp',group:1,missing:miss,likes:18,cap:'2026，總統府前。八年前說好的，少了'+cnt+'。',cmts:cm,then:end});
+  },600);
+}
+function absent(n){profile(n)}
+function end(){
+  var m=S.gone,el=document.createElement('div');el.className='endbox';
+  el.innerHTML='<p>八年前一起舉手的六個人，<br>今天站在這裡的有 '+(6-m.length)+' 個。<br>沒來的：'+m.join('、')+'。</p><p>換條路，誰會站在這裡？</p><button class="btn">再玩一次</button>';
+  add(el);el.querySelector('.btn').onclick=function(){PREV=S.choice;start()};
+}
+function start(){
+  S={ab:{},last:{},posts:{},choice:{},gone:null,live:[],year:null};
+  FRIENDS.forEach(function(n){S.ab[n]=0;S.last[n]=-1;S.posts[n]=[]});
+  closeSheet();$('feed').innerHTML='';stories();
+  post({n:'阿芳',y:2018,photo:'opening.webp',likes:24,cap:'老顏今天第一天去少子女化對策辦公室上班！說好了，2026 年我們再來這裡拍一次🙌',cmts:[['家豪','顏座好'],['宜君','八年後見，一個都不能少']],then:function(){decision(0)}});
+}
+start();
+window.__S=function(){return S};
+</script>
+</body>
+</html>
