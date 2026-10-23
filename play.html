@@ -687,13 +687,13 @@ function commit(side){
 function renderEnd(completed){
   var h = "";
   if (!completed) { h += '<div class="death">'+ENDINGS[state.ending]+'</div><div class="meta">'+state.year+' · 你倒在第 '+state.picks.length+' 張卡</div>'; }
-  else { h += '<div class="death">你撐完了八年。<br>但出生人口還在往下。錢花得最多，生育率史上最低。</div><div class="meta">出生 '+state.values.births+' · 耐心 '+state.values.patience+' · 財政 '+state.values.money+'</div>'; }
+  else { h += '<div class="death">你撐完了八年。<br>但出生人口還在往下。錢花得最多，出生人數卻是史上最少。</div><div class="meta">出生 '+state.values.births+' · 耐心 '+state.values.patience+' · 財政 '+state.values.money+'</div>'; }
   h += '<div class="bill"><div class="bh">這八年的帳單</div>'
     + '<div class="br"><b>2018</b>育兒補助每月 2,500 元</div>'
     + '<div class="br"><b>2022</b>加到每月 5,000 元</div>'
     + '<div class="br"><b>2026</b>0 到 18 歲成長津貼 1,853 億元</div>'
     + '<div class="br"><b>2026</b>私幼每月 15,000 提案，一年再 423 億元（協商中）</div>'
-    + '<div class="bt">少子女化預算 198.8 億 → 3,666.7 億<br>生育率 1.125 → 0.695</div></div>';
+    + '<div class="bt">少子女化預算 198.8 億 → 3,666.7 億<br>全年出生 181,601 人 → 107,812 人（2018 → 2025）<br>2026 年前 9 月只有 69,446 人，比去年同期少 14.67%</div></div>';
   h += '<ul class="log">';
   state.picks.forEach(function(p,i){
     var c=p.card;
