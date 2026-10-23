@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>我們這一班｜Baby or Bust</title>
+<style>
+@font-face{font-family:Huninn;src:url(assets/fonts/huninn-1.woff2) format("woff2")}
+@font-face{font-family:Huninn;src:url(assets/fonts/huninn-2.woff2) format("woff2")}
+@font-face{font-family:Huninn;src:url(assets/fonts/huninn-3.woff2) format("woff2")}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#ffecf1;font-family:Huninn,"PingFang TC","Noto Sans TC",sans-serif;color:#503c3c;overflow:hidden;touch-action:manipulation}
+#app{max-width:440px;margin:0 auto;height:100%;display:flex;flex-direction:column;position:relative}
+header{padding:14px 18px 6px;display:flex;align-items:flex-end;justify-content:space-between}
+header h1{font-size:21px;margin:0;font-weight:normal}
+header .sub{font-size:13px;color:#a07882;margin-top:3px}
+.money{width:110px;text-align:right;font-size:12px;color:#a07882}
+.bar{height:8px;border-radius:4px;background:#f6d3dc;margin-top:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:#f07896;transition:width .6s}
+#photo{margin:4px 14px 0;background:#fffaf5;border:3px solid #ebc8d2;border-radius:14px;padding:8px 2px 10px;position:relative;overflow:hidden}
+.row{display:flex;justify-content:center;margin-top:-10px}
+.row:first-child{margin-top:0}
+.row.odd{padding-left:8%}
+.seat{position:relative;width:16.5%;margin:0 -1%;flex:none;transition:opacity .8s,filter .8s,transform .8s}
+.bun{width:100%;padding-top:51.3%;background-size:100% auto;background-position:center;background-repeat:no-repeat}
+.seat.main{cursor:pointer}
+.seat .tag{position:absolute;left:50%;transform:translateX(-50%);bottom:-4px;font-size:10px;background:#f07896;color:#fff;border-radius:7px;padding:0 5px;white-space:nowrap;z-index:2}
+.seat.me .tag{background:#7a9cc6}
+.seat.h2 .bun{transform:scaleX(-1);opacity:.8;filter:saturate(.5)}
+.seat.h1 .bun{transform:scaleX(-1);opacity:.45;filter:grayscale(1)}
+.seat.h0 .bun{opacity:0}
+.seat.h0::after{content:"";position:absolute;left:30%;right:30%;top:2px;bottom:4px;border:2px dashed #d796a5;border-radius:10px}
+.seat.h0 .tag{background:#c9aab3}
+.seat .baby{position:absolute;right:6px;top:-2px;font-size:13px}
+.seat.flash .bun{animation:fl .9s 2}
+@keyframes fl{50%{filter:brightness(1.4) drop-shadow(0 0 6px #f07896)}}
+#stage{flex:1;position:relative;margin:10px 14px 14px;min-height:0}
+.card{position:absolute;inset:0;background:#fff;border-radius:22px;box-shadow:4px 6px 0 #f0c8d2;padding:14px 14px 12px;display:flex;flex-direction:column;touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .35s,opacity .35s}
+.card .meta{font-size:13px;color:#a07882}
+.card .q{font-size:19px;line-height:1.45;margin:6px 2px 10px}
+.opts{flex:1;display:flex;gap:12px;min-height:0}
+.opt{flex:1;background:#fff3f6;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;cursor:pointer;transition:background .2s,transform .2s;text-align:center}
+.opt .bun{width:120px;padding-top:61px}
+.opt .duo{display:flex}.opt .duo .bun{width:76px;padding-top:39px;margin:0 -6px}
+.opt b{font-weight:normal;color:#f07896;font-size:17px;margin-top:6px}
+.opt span{font-size:15px;margin-top:4px;line-height:1.35}
+.opt.hot{background:#ffd6e1;transform:scale(1.04)}
+.card.boss{box-shadow:4px 6px 0 #e89aae;border:3px solid #f07896}
+.toast{position:absolute;left:14px;right:14px;background:#fff;border-radius:16px;padding:10px 14px;font-size:15px;box-shadow:0 4px 14px rgba(200,120,140,.25);z-index:20;opacity:0;transform:translateY(10px);transition:all .35s;pointer-events:none}
+.toast.on{opacity:1;transform:none}
+.toast .who{color:#f07896}
+.toast .read{color:#b0a0a5;font-size:13px;margin-top:4px}
+.overlay{position:absolute;inset:0;background:rgba(255,236,241,.97);z-index:30;display:none;flex-direction:column;overflow:auto}
+.overlay.on{display:flex}
+#profile{z-index:40}
+.btn{display:block;margin:14px auto;background:#f07896;color:#fff;border:0;border-radius:24px;font:inherit;font-size:18px;padding:12px 30px;cursor:pointer}
+/* profile */
+.prof{padding:22px 18px}
+.prof .top{display:flex;align-items:center;gap:16px}
+.ava{width:84px;height:84px;border-radius:50%;background:#ffe4eb;overflow:hidden;flex:none;position:relative}
+.ava .bun{position:absolute;width:150%;left:-25%;top:18%}
+.prof h2{margin:0;font-weight:normal;font-size:24px}
+.prof .st{color:#967078;font-size:15px;margin-top:4px}
+.unf{background:#f5f0f2;color:#9a8a90;text-align:center;border-radius:10px;padding:9px;margin:16px 0 4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:12px}
+.post{position:relative;padding-top:100%;background:#ffe6d2;overflow:hidden;border-radius:4px}
+.post .bun{position:absolute;width:120%;left:-10%;bottom:0}
+.post .cap{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:rgba(255,255,255,.9);border-radius:10px;padding:2px 8px;font-size:13px;white-space:nowrap}
+.post .yr{position:absolute;right:6px;bottom:4px;font-size:11px;color:#fff;text-shadow:0 0 3px #a07882}
+.post.g1{filter:saturate(.35)}.post.g2{filter:grayscale(1);opacity:.8}
+.post.locked{background:#f3eef0}.post.locked .cap{display:none}
+.close{position:absolute;top:10px;right:14px;font-size:26px;background:none;border:0;color:#a07882;cursor:pointer}
+/* end */
+.end{padding:20px 18px}
+.end h2{font-weight:normal;margin:0 0 6px;font-size:22px}
+.end .say{background:#fff;border-radius:16px;padding:12px 14px;margin:10px 0;font-size:15px;line-height:1.5}
+.end .li{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:8px 10px;margin:6px 0;cursor:pointer}
+.end .li .ava{width:44px;height:44px}
+.end .li .n{font-size:16px}.end .li .s{font-size:13px;color:#967078}
+.end .li.gone{opacity:.6}
+#intro{justify-content:center;text-align:center;padding:30px}
+#intro p{font-size:16px;line-height:1.7}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div><h1>1992 年的我們</h1><div class="sub" id="sub"></div></div>
+    <div class="money">財政<div class="bar"><i id="mbar" style="width:100%"></i></div></div>
+  </header>
+  <div id="photo"></div>
+  <div id="stage"></div>
+  <div class="toast" id="toast"></div>
+  <div class="overlay" id="intro">
+    <h2 style="font-weight:normal">我們這一班</h2>
+    <p>2018 年，你剛進少子女化對策辦公室。<br>同學都叫你「老顏」。<br><br>每張卡都是兩個同學在吵。<br>滑向誰，就是站在誰那邊。<br>點合照裡同學的臉，看他這幾年。</p>
+    <button class="btn" id="startBtn">開始</button>
+  </div>
+  <div class="overlay" id="profile"></div>
+  <div class="overlay" id="end"></div>
+</div>
+<script>
+var A='assets/themes/bunny/';
+var MAIN={
+ '宜君':{acc:'apron',role:'教保員',bg:'#ffe6d2',st:['保險業務｜歡迎詢問','想轉行','好累','教保員'],posts:[[2018,'新班開學'],[2020,'又加班'],[2022,'一個人顧 15 個'],[2024,function(h){return h==0?'新工作':'還在教'}]]},
+ '阿芳':{acc:'baby',role:'會計・媽媽',bg:'#ffd6e2',st:['已取消追蹤你','自己帶好累','一個就好','兩個寶貝的媽'],posts:[[2018,'第一胎報到'],[2019,'滿月'],[2022,function(h){return h>=2?'妹妹也來了':'一個就好'}],[2025,'家庭日']]},
+ '家豪':{acc:'sign',role:'私幼園長',bg:'#fff0c8',st:['改開補習班','園所頂讓中','減班中','園長｜招生中'],posts:[[2018,'掛牌！'],[2021,'停課中'],[2023,'招不到老師'],[2025,function(h){return h<=1?'頂讓公告':'招生中'}]]},
+ '志豪':{acc:'tie',role:'工程師・租屋',bg:'#dfeefc',st:['已取消追蹤你','搬回老家','還在租','新婚'],posts:[[2018,'看房'],[2021,'被減薪'],[2023,'求婚'],[2025,function(h){return h>=2?'寶寶出生':'還在租'}]]},
+ '詩涵':{acc:'sash',role:'社工',bg:'#e4f4e6',st:['離職中','請長假','案量爆表','社工'],posts:[[2018,'到職'],[2020,'家訪'],[2022,'又一個案子'],[2025,function(h){return h==0?'最後一天':'還在撐'}]]},
+ '冠宇':{acc:'file',role:'教育處科員',bg:'#ece6fa',st:['辭職開飲料店','想考調','加班中','科員'],posts:[[2018,'報到'],[2021,'又一個中央公文'],[2023,'加班到十點'],[2025,function(h){return h==0?'開幕':'還在加班'}]]}
+};
+var OTHERS=["俊傑","雅婷","建宏","怡君","承恩","佳穎","冠廷","婉婷","柏翰","欣怡","家銘","淑芬","彥廷","思妤","志明","美玲","俊宏","惠雯","信宏","筱涵","威廷","佩珊","宗翰"];
+var ACCS=['apron','tie','glasses','mic','pin','sash','sign','file','baby'];
+var CARDS=[
+ {y:2018,who:'政務委員 林萬億',q:'公幼要蓋好幾年，先每月發 2,500 給家長？',L:['宜君','蓋公幼，我才有正職','@老顏 等你的公幼！',-5],R:['阿芳','發錢，月子錢就有了','@老顏 愛你❤',-10]},
+ {y:2018,who:'私幼業者',q:'我們壓低學費加入，條件是政府少來查。',L:['詩涵','要合作就得被查','@老顏 這樣我安心',-7],R:['家豪','少查，我們馬上掛牌','@老顏 下週就掛牌',-9]},
+ {y:2021,who:'私幼園長',q:'三級警戒停課，老師薪水誰發？',L:['家豪','政府發錢救園','@老顏 老師保住了',-11],R:['志豪','我也被減薪，誰救我','@老顏 錢沒亂花就好',2]},
+ {y:2021,who:'執政黨立委',q:'育兒補助從 3,500 加到 5,000？',L:['冠宇','不加，配合款又是地方','@老顏 地方謝謝你',6],R:['志豪','加，我們才敢生','@老顏 開始存奶粉錢',-12]},
+ {y:2022,who:'佩珊轉貼新聞',q:'板橋幼兒園被控虐童，教室沒有畫面。',L:['詩涵','全國都裝，下次才看得到','@老顏 謝謝你',-9],R:['宜君','我們不是犯人','@老顏 謝謝你相信我們',0]},
+ {y:2023,who:'國教署承辦人',q:'一個老師顧 15 個，要修法降到 12？',L:['宜君','修法，我真的顧不來','@老顏 終於能喘口氣',-4],R:['家豪','請不到人，會倒','@老顏 撐住了',-1]},
+ {y:2024,who:'教保員代表',q:'起薪 31,200，再不加薪大家都轉行。',L:['宜君','我只是想繼續教','@老顏 我再撐一年',-11],R:['阿芳','錢留給家長啦','@老顏 夠義氣',4]},
+ {y:2025,who:'內政部官員',q:'社宅要等好幾年，租金補貼下個月就有。',L:['冠宇','蓋社宅，租補會被房東吃掉','@老顏 長遠來看是對的',-5],R:['志豪','租補，我下個月就要繳','@老顏 房租有著落了',-6]},
+ {y:2025,who:'佩珊轉貼新聞',q:'保母訪視紀錄造假，一個孩子走了。',L:['詩涵','多請社工去看','@老顏 案量能降了',-8],R:['冠宇','先抓造假的人','@老顏 該辦的辦了',0]},
+ {y:2026,who:'立法委員',boss:1,q:'讀私幼每月補到 15,000，一年多 423 億。補不補？',L:['宜君,冠宇','不補，蓋平價園','@老顏 這次你站對了',8],R:['家豪,阿芳','補！','@老顏 一萬五入袋！',-12]},
+ {y:2026,who:'老顏自己',final:1,q:'這幾年，你看著同學一個個當爸媽。老顏，你自己要生嗎？',L:['','先不要',''],R:['','想生','']}
+];
+var S;
+function $(i){return document.getElementById(i)}
+function bun(acc,extra){return '<div class="bun" style="background-image:url('+A+acc+'.webp)'+(extra||'')+'"></div>'}
+function rnd(n){return Math.floor(Math.random()*n)}
+function newGame(){
+  var names=OTHERS.slice();var mains=Object.keys(MAIN);
+  var seats=[];for(var i=0;i<names.length;i++)seats.push({n:names[i],acc:ACCS[rnd(9)]});
+  // place mains + me at spread positions
+  var slots=[3,8,11,15,19,24];mains.forEach(function(m,k){seats.splice(slots[k],0,{n:m,acc:MAIN[m].acc,main:1})});
+  seats.splice(13,0,{n:'老顏',acc:'glasses',me:1});
+  seats=seats.slice(0,30);
+  var hearts={},loss={};mains.forEach(function(m){hearts[m]=3;loss[m]=[]});
+  var total=2+rnd(5);var at=[1];var pool=[2,3,4,5,6,7,8,9];while(at.length<total){var p=pool.splice(rnd(pool.length),1)[0];at.push(p)}
+  S={i:0,money:70,hearts:hearts,loss:loss,seats:seats,births:[],birthAt:at,year:2018,left:0,dead:null,final:null,busy:false};
+  renderPhoto();renderCard();
+}
+function renderPhoto(){
+  var html='',rows=[6,6,6,6,6],k=0;
+  rows.forEach(function(n,r){html+='<div class="row'+(r%2?' odd':'')+'">';for(var j=0;j<n;j++){var s=S.seats[k++];if(!s)continue;
+    var cls='seat';if(s.main){cls+=' main h'+S.hearts[s.n]}if(s.me)cls+=' me';if(S.dead==='kick'&&s.me)cls+=' h0';
+    html+='<div class="'+cls+'" data-n="'+s.n+'">'+bun(s.acc)+((s.main||s.me)?'<div class="tag">'+(s.me?'你':s.n)+'</div>':'')+(S.births.indexOf(s.n)>=0?'<div class="baby">👶</div>':'')+'</div>'}
+    html+='</div>'});
+  $('photo').innerHTML=html;
+  var left=0;for(var m in S.hearts)if(S.hearts[m]==0)left++;
+  $('sub').textContent=(S.dead||S.i>=CARDS.length?'2026 同學會':S.year)+'｜合照裡還有 '+(30-left-(S.dead==='kick'||S.dead==='job'?1:0))+' 人';
+  $('mbar').style.width=Math.max(0,S.money/70*100)+'%';
+  Array.prototype.forEach.call(document.querySelectorAll('.seat.main'),function(el){el.onclick=function(){openProfile(el.dataset.n)}});
+}
+function optHTML(side){
+  var o=side,names=o[0]?o[0].split(','):[];
+  var face=names.length>1?'<div class="duo">'+names.map(function(n){return bun(MAIN[n].acc)}).join('')+'</div>':(names.length?bun(MAIN[names[0]].acc):'');
+  return face+(names.length?'<b>'+names.join('＋')+'</b>':'')+'<span>'+o[1]+'</span>';
+}
+function renderCard(){
+  var c=CARDS[S.i];S.year=c.y;renderPhoto();
+  var el=document.createElement('div');el.className='card'+(c.boss?' boss':'');
+  el.innerHTML='<div class="meta">'+c.y+'｜'+c.who+'</div><div class="q">「'+c.q+'」</div><div class="opts"><div class="opt" data-s="L"><div style="font-size:12px;color:#c08a96">← 往左</div>'+optHTML(c.L)+'</div><div class="opt" data-s="R"><div style="font-size:12px;color:#c08a96">往右 →</div>'+optHTML(c.R)+'</div></div>';
+  $('stage').innerHTML='';$('stage').appendChild(el);
+  el.style.transform='translateY(30px)';el.style.opacity=0;requestAnimationFrame(function(){el.style.transform='';el.style.opacity=1});
+  var opts=el.querySelectorAll('.opt');
+  opts.forEach(function(o){o.onclick=function(){if(!moved)choose(o.dataset.s,el)}});
+  var x0=null,dx=0,moved=false;
+  el.onpointerdown=function(e){x0=e.clientX;dx=0;moved=false;el.style.transition='none'};
+  el.onpointermove=function(e){if(x0===null)return;dx=e.clientX-x0;if(Math.abs(dx)>8)moved=true;el.style.transform='translateX('+dx+'px) rotate('+dx/25+'deg)';opts[0].classList.toggle('hot',dx<-40);opts[1].classList.toggle('hot',dx>40)};
+  el.onpointerup=el.onpointercancel=function(){if(x0===null)return;x0=null;el.style.transition='';if(Math.abs(dx)>90){choose(dx<0?'L':'R',el)}else{el.style.transform='';opts[0].classList.remove('hot');opts[1].classList.remove('hot')}setTimeout(function(){moved=false},50)};
+}
+function toast(html,ms){var t=$('toast');t.innerHTML=html;t.style.top=($('photo').offsetTop+20)+'px';t.classList.add('on');return new Promise(function(r){setTimeout(function(){t.classList.remove('on');setTimeout(r,350)},ms||1600)})}
+function choose(side,el){
+  if(S.busy)return;S.busy=true;
+  var c=CARDS[S.i],win=c[side],lose=c[side=='L'?'R':'L'];
+  el.style.transform='translateX('+(side=='L'?-500:500)+'px) rotate('+(side=='L'?-20:20)+'deg)';el.style.opacity=0;
+  if(c.final){S.final=win[1];S.i++;setTimeout(showEnd,500);return}
+  S.money+=win[3];
+  var losers=lose[0].split(','),gone=[];
+  losers.forEach(function(n){if(S.hearts[n]>0){S.hearts[n]--;S.loss[n].push(c.y);if(S.hearts[n]==0)gone.push(n)}});
+  var wn=win[0].split(',');
+  var msg='<div><span class="who">'+wn.join('、')+'：</span>'+win[2]+'</div><div class="read">'+losers.join('、')+' 已讀</div>';
+  setTimeout(function(){
+    renderPhoto();
+    losers.forEach(function(n){var s=document.querySelector('.seat[data-n="'+n+'"]');if(s)s.classList.add('flash')});
+    var p=toast(msg,1700);
+    gone.forEach(function(n){p=p.then(function(){return toast('<div><span class="who">'+n+'</span> 走出了合照</div><div class="read">你第三次沒有站在'+n+'那邊</div>',1800)})});
+    p.then(function(){
+      S.i++;
+      var left=0;for(var m in S.hearts)if(S.hearts[m]==0)left++;
+      if(left>=3){S.dead='kick';return toast('<div><span class="who">阿芳</span> 已將你移出群組</div>',2000).then(showEnd)}
+      if(S.money<=0){S.dead='job';return toast('<div>財政見底，你丟了工作，自己退出群組</div>',2000).then(showEnd)}
+      var bp=Promise.resolve();
+      if(S.birthAt.indexOf(S.i)>=0)bp=birth();
+      bp.then(function(){S.busy=false;renderCard()});
+    });
+  },350);
+}
+function birth(){
+  var name;
+  if(S.births.length==0)name='阿芳';
+  else{var cand=[];for(var m in MAIN){if(S.births.indexOf(m)<0&&S.hearts[m]>=2&&m!=='阿芳'){cand.push(m,m)}}
+    OTHERS.forEach(function(o){if(S.births.indexOf(o)<0&&S.seats.some(function(s){return s.n==o}))cand.push(o)});
+    name=cand[rnd(cand.length)]}
+  S.births.push(name);renderPhoto();
+  var s=document.querySelector('.seat[data-n="'+name+'"]');if(s)s.classList.add('flash');
+  return toast('<div>📌 本班第 '+S.births.length+' 位小朋友！</div><div class="read" style="color:#503c3c;font-size:15px">'+name+' 喜獲麟兒，猴腮雷啊！</div>',2000);
+}
+function stIdx(n){return S.hearts[n]}
+function openProfile(n){
+  var m=MAIN[n],h=S.hearts[n],ov=$('profile');
+  var posts=m.posts.map(function(p){var y=p[0],cap=typeof p[1]=='function'?p[1](h):p[1];var lost=S.loss[n].filter(function(ly){return ly<=y}).length;var locked=y>S.year&&!(S.dead||S.i>=CARDS.length);
+    return '<div class="post'+(locked?' locked':'')+(lost>=2?' g2':lost==1?' g1':'')+'" style="background:'+(locked?'':m.bg)+'">'+(locked?'':bun(m.acc==='file'&&lost>=3?'tie':m.acc))+'<div class="cap">'+cap+'</div><div class="yr">'+y+'</div></div>'}).join('');
+  ov.innerHTML='<button class="close" id="cls">×</button><div class="prof"><div class="top"><div class="ava" style="'+(h<=1?'filter:grayscale(1)':'')+'">'+bun(m.acc)+'</div><div><h2>'+n+'</h2><div class="st">'+m.st[h]+'</div><div class="st" style="font-size:12px">'+m.role+'</div></div></div>'+(h==0?'<div class="unf">已取消追蹤你</div>':'')+'<div class="grid">'+posts+'</div></div>';
+  ov.classList.add('on');$('cls').onclick=function(){ov.classList.remove('on')};
+}
+function showEnd(){
+  S.busy=true;renderPhoto();$('stage').innerHTML='';
+  var ov=$('end'),list='';
+  for(var n in MAIN){var h=S.hearts[n];list+='<div class="li'+(h==0?' gone':'')+'" data-n="'+n+'"><div class="ava">'+bun(MAIN[n].acc)+'</div><div><div class="n">'+n+(h==0?'（沒來）':'')+'</div><div class="s">'+MAIN[n].st[h]+'</div></div></div>'}
+  var head=S.dead==='kick'?'你被移出了群組':S.dead==='job'?'你丟了工作':'2026 同學會';
+  var say='<b>阿芳：</b>本班這幾年生了 '+S.births.length+' 個小朋友：'+S.births.join('、')+'。'+(S.dead==='kick'?'<br>（這次同學會，沒有人通知你。）':S.dead==='job'?'<br>老顏怎麼退群了？':'<br>老顏，你都是我們的好同學。');
+  var me=S.final?'<div class="say"><b>老顏：</b>'+(S.final==='想生'?'我想生。':'先不要。')+'</div>':'';
+  ov.innerHTML='<div class="end"><h2>'+head+'</h2><div style="font-size:13px;color:#a07882">點同學看他這幾年</div><div class="say">'+say+'</div>'+me+list+'<button class="btn" id="again">再來一次</button></div>';
+  ov.classList.add('on');
+  ov.querySelectorAll('.li').forEach(function(el){el.onclick=function(){openProfile(el.dataset.n)}});
+  $('again').onclick=function(){ov.classList.remove('on');newGame()};
+}
+$('intro').classList.add('on');
+$('startBtn').onclick=function(){$('intro').classList.remove('on');newGame()};
+window.__S=function(){return S};
+</script>
+</body>
+</html>
