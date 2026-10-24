@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>我們這一班｜宣傳版 POC</title>
+<style>
+:root{--ink:#333;--paper:#fbfaf6;--line:#cfcabd;--off:#8a857a}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#e9e6de;color:var(--ink);font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+#app{max-width:430px;margin:0 auto;min-height:100%;background:var(--paper);
+ background-image:repeating-linear-gradient(0deg,transparent 0 27px,#ece8dc 27px 28px);padding:18px 16px 120px}
+.sk{filter:url(#rough)}
+.yr{font-size:13px;color:var(--off);letter-spacing:.2em;margin:26px 0 8px;text-align:center}
+.box{border:2px solid var(--ink);border-radius:10px 14px 9px 13px;background:#fff;padding:14px;margin:12px 0;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.tag{display:inline-block;font-size:11px;border:1.5px solid var(--ink);border-radius:9px;padding:1px 8px;margin-bottom:6px}
+.news .tag{background:#333;color:#fff}
+.news h3{margin:4px 0;font-size:18px;line-height:1.45}
+.src{font-size:11px;color:var(--off);margin-top:8px;line-height:1.5}
+.real{font-size:10px;border:1px solid var(--off);border-radius:6px;padding:0 4px;margin-left:4px;color:var(--off)}
+.fake{font-size:10px;border:1px dashed #c55;border-radius:6px;padding:0 4px;margin-left:4px;color:#c55}
+.who{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--off);margin-bottom:6px}
+.q{font-size:17px;line-height:1.6}
+.opts{display:flex;gap:10px;margin-top:14px}
+.opt{flex:1;border:2px solid var(--ink);border-radius:12px 8px 13px 9px;background:var(--paper);padding:12px 8px;font-size:15px;font-weight:600;cursor:pointer;text-align:center}
+.opt small{display:block;font-weight:400;font-size:11px;color:var(--off);margin-top:4px}
+.opt:active{transform:scale(.97)}
+.chosen{background:#333;color:#fff}.chosen small{color:#ddd}
+.dim{opacity:.35;pointer-events:none}
+.post .acct{font-weight:700;font-size:14px}
+.post .acct span{font-weight:400;color:var(--off);font-size:12px}
+.adimg{margin:10px 0;border:2px dashed var(--ink);border-radius:8px;padding:18px 12px;text-align:center;font-size:20px;font-weight:800;line-height:1.5;background:#fffef7}
+.likes{font-size:12px;color:var(--off)}
+.cm{display:flex;gap:8px;align-items:flex-start;margin-top:10px;animation:in .3s ease}
+.cm b{font-size:13px}.cm p{margin:2px 0 0;font-size:14px;line-height:1.5}
+.cm .pro{font-size:10px;color:#3a7;border:1px solid #3a7;border-radius:6px;padding:0 4px;margin-left:4px}
+.next{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);border:2px solid var(--ink);background:#fff;border-radius:22px 18px 23px 17px;padding:12px 30px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:3px 3px 0 #333}
+.next[hidden]{display:none}
+.photo{display:flex;justify-content:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fig{text-align:center;font-size:12px;width:54px}
+.fig.gone{opacity:.25}
+.fig.gone .nm{text-decoration:line-through}
+.end h2{text-align:center;font-size:20px;margin:6px 0}
+.small{font-size:13px;color:var(--off);text-align:center;line-height:1.6}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter></svg>
+<div id="app"></div>
+<button class="next" id="next" hidden>下一步</button>
+<script>
+var FR={
+ 老顏:{role:"政策規劃師（你）"},
+ 阿芳:{role:"會計・準媽媽"},
+ 宜君:{role:"公幼老師"},
+ 家豪:{role:"私幼執行長"},
+ 志豪:{role:"業務・租屋族"},
+ 詩涵:{role:"社工"}
+};
+var CAST=["阿芳","宜君","家豪","志豪","詩涵"];
+var hurt={};CAST.forEach(function(n){hurt[n]=0});
+var path=[];
+
+function fig(name,opt){opt=opt||{};var s=opt.s||34;
+ var mood=opt.mood||"smile";
+ var mouth=mood==="sad"?'<path d="M13 21 q4 -3 8 0" fill="none"/>':mood==="flat"?'<path d="M13 20 h8"/>':'<path d="M13 19 q4 3 8 0" fill="none"/>';
+ var hair={阿芳:'<path d="M7 9 q10 -10 20 0"/><path d="M26 10 q4 8 1 14"/>',宜君:'<path d="M8 8 q9 -6 18 0"/><circle cx="27" cy="7" r="3"/>',家豪:'<path d="M9 7 l4 -3 l4 3 l4 -3 l4 3"/>',志豪:'<path d="M8 9 h18"/>',詩涵:'<path d="M7 10 q10 -12 20 0 v8"/><path d="M7 10 v8"/>',老顏:'<rect x="9" y="12" width="6" height="4" rx="1" fill="none"/><rect x="19" y="12" width="6" height="4" rx="1" fill="none"/><path d="M15 14 h4"/>'}[name]||"";
+ var body=opt.head?'':'<path d="M17 30 v22 M17 36 l-10 8 M17 36 l10 8 M17 52 l-8 14 M17 52 l8 14"/>';
+ var h=opt.head?34:70;
+ return '<svg class="sk" width="'+s+'" height="'+(s*h/34)+'" viewBox="0 0 34 '+h+'" stroke="#333" stroke-width="2" stroke-linecap="round" fill="none"><circle cx="17" cy="16" r="12" fill="#fff"/>'+hair+'<circle cx="13" cy="15" r="1" fill="#333"/><circle cx="21" cy="15" r="1" fill="#333"/>'+mouth+body+'</svg>';
+}
+
+/* ===== 腳本 ===== */
+var NODES=[
+ {type:"open",year:"2018 夏・總統府前"},
+ {type:"node",year:"2018",
+  news:"2017 年出生不到 20 萬人，總生育率 1.13，全球倒數第三。",newsSrc:"行政院新聞稿 2018-07-26",
+  who:"行政院政務委員 林萬億",q:"「蓋公立幼兒園要好幾年，爸媽現在就要繳學費。要不要先每月直接發 2,500 元給家長？」",
+  L:{label:"堅持公共化幼兒園",sub:"慢，但便宜名額會變多",hurt:["阿芳","家豪"],
+     ad:"公幼一班一班蓋<br>三年後，讓每個孩子抽得到",real:false,
+     cm:[["阿芳","@老顏 三年後？我下個月就生了😭"],["家豪","公幼一直蓋，私幼要收了"],["宜君","公幼要開老師缺嗎？我先報名",1]]},
+  R:{label:"先發錢給家長",sub:"最快，但錢一發就收不回",hurt:["宜君"],history:true,
+     ad:"孩子都是寶！<br>育兒津貼擴大到 0 到 4 歲<br>每年補助 3 萬",real:true,adSrc:"行政院說法，見中國時報 2018-05-17",
+     cm:[["阿芳","@老顏 2,500 我收下了，但保母一個月兩萬欸😂"],["宜君","發錢很快，那我們老師的薪水呢？"],["家豪","家長有錢就會來我們這邊讀，感謝政府👍",1]]}
+ },
+ {type:"inter",year:"2020",
+  news:"總統在總統府家庭日說，今天有 19 個未滿 1 歲的寶寶，「總統府做為全國最矚目的機關，更要努力生產」。",newsSrc:"總統府新聞 2020-08-07",
+  cm:[["詩涵","@老顏 你們辦公室有在努力嗎🤣"],["志豪","先讓我買得起房再說"]]},
+ {type:"node",year:"2021",
+  news:"疫情三級警戒，全國幼兒園停課約十週。",newsSrc:"教育部 2021 年停課措施",
+  who:"執政黨立委",q:"「每月育兒補助從 3,500 加到 5,000，爸媽一定開心。但這筆錢加了就減不回來，以後每年都要付。」",
+  L:{label:"不加，省下來",sub:"國庫穩，爸媽失望",hurt:["阿芳","詩涵"],
+     ad:"錢要花在刀口上<br>先把托育名額補齊",real:false,
+     cm:[["阿芳","@老顏 刀口？我就是那個刀口"],["詩涵","我個案的媽媽本來在等那 1,500"],["志豪","至少有人記得錢不是天上掉下來的",1]]},
+  R:{label:"加到 5,000",sub:"爸媽開心，以後年年要付",hurt:["志豪"],history:true,
+     ad:"0-6 歲國家一起養<br>減負擔、增福利<br>敢婚、願生、樂養",real:true,adSrc:"行政院新聞稿 2021-02-23；「政府會當爸媽的神隊友」總統府新聞 2021-05-07",
+     cm:[["阿芳","@老顏 神隊友喔？停課十週，小孩是我阿嬤顧的"],["志豪","5,000 一個月，我房租兩萬二"],["家豪","補助加了，園所停課沒收入，老師薪水我先墊"],["詩涵","我個案的媽媽真的有差，5,000 是一週的菜錢",1]]}
+ },
+ {type:"node",year:"2024",
+  news:"公立幼兒園延托上路，每小時 35 元。",newsSrc:"中央社 2024-01-25",
+  who:"雙薪家長",q:"「公幼四點放學，我六點才下班。下課後的延托能不能全免費？園長問：晚上留下來顧孩子的老師，薪水誰出？」",
+  L:{label:"每小時收 35 元",sub:"家長付一點，老師還是要留",hurt:["宜君"],history:true,
+     ad:"0-6 歲國家一起養 2.0<br>公幼延長平日托育<br>寒暑期也有服務",real:true,adSrc:"行政院「0-6歲國家一起養2.0」廣告，中華郵政刊登 2024",
+     cm:[["宜君","@老顏 延托是誰顧？是我。五點以後的我。"],["阿芳","35 塊很佛心，但老師一直換人"],["家豪","私幼沒有這個補助，家長問我們為什麼比較貴"]]},
+  R:{label:"延托全免費",sub:"家長最爽，加班費國家出",hurt:["宜君","家豪"],
+     ad:"延托免費！<br>放心加班，國家幫你顧",real:false,
+     cm:[["宜君","@老顏 免費的是家長，加班的是我"],["家豪","公幼免費延托，我這邊家長全跑了"],["阿芳","終於不用飆車接小孩🥹",1]]}
+ },
+ {type:"final",year:"2026",
+  news:"總統宣布「0 到 18 歲成長津貼」，每人每月 5,000 元，6 歲後一半存進孩子的專戶，滿 18 歲領出，「這就是國家送給青年朋友的成年禮」。",newsSrc:"總統府新聞、行政院院會 2026-05-28"}
+];
+
+var app=document.getElementById("app"),nx=document.getElementById("next"),i=0;
+function add(html){var d=document.createElement("div");d.innerHTML=html;var el=d.firstElementChild;app.appendChild(el);setTimeout(function(){el.scrollIntoView({behavior:"smooth",block:"end"})},30);return el}
+function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function btn(label){return new Promise(function(r){nx.textContent=label;nx.hidden=false;nx.onclick=function(){nx.hidden=true;r()}})}
+function newsCard(n){return add('<div class="box news"><span class="tag">新聞</span><h3>'+n.news+'</h3><div class="src">出處：'+n.newsSrc+'<span class="real">真</span></div></div>')}
+function comments(box,list){return list.reduce(function(p,c){return p.then(function(){return wait(800)}).then(function(){
+  var el=document.createElement("div");el.className="cm";
+  el.innerHTML='<div>'+fig(c[0],{head:1,s:28,mood:c[2]?"smile":"sad"})+'</div><div><b>'+c[0]+'</b>'+(c[2]?'<span class="pro">挺</span>':'')+'<p>'+c[1]+'</p></div>';
+  box.appendChild(el);el.scrollIntoView({behavior:"smooth",block:"end"});})},Promise.resolve())}
+function post(opt){
+ var b=add('<div class="box post"><div class="who">'+fig("老顏",{head:1,s:28,mood:"flat"})+'<div class="acct">少子女化對策辦公室 <span>・老顏 代發</span></div></div>'+
+  '<div class="adimg">'+opt.ad+'</div>'+
+  '<div class="src">'+(opt.real?'當年真的廣告／說法<span class="real">真</span>　'+opt.adSrc:'沒發生的那一版<span class="fake">虛構</span>')+'</div>'+
+  '<div class="likes">♡ '+(120+Math.floor(Math.random()*80))+'</div></div>');
+ return comments(b,opt.cm);
+}
+function choice(n){return new Promise(function(r){
+ var b=add('<div class="box"><div class="who">'+fig("老顏",{head:1,s:26,mood:"flat"})+'你要回覆：'+n.who+'</div><div class="q">'+n.q+'</div><div class="opts"><div class="opt" data-k="L">'+n.L.label+'<small>'+n.L.sub+'</small></div><div class="opt" data-k="R">'+n.R.label+'<small>'+n.R.sub+'</small></div></div></div>');
+ b.querySelectorAll(".opt").forEach(function(o){o.onclick=function(){
+  var k=o.dataset.k;o.classList.add("chosen");b.querySelectorAll(".opt").forEach(function(x){if(x!==o)x.classList.add("dim")});
+  b.querySelectorAll(".opt").forEach(function(x){x.onclick=null});r(k)}});
+})}
+function photo(absent){return '<div class="photo">'+["老顏"].concat(CAST).map(function(n){var g=absent&&absent.indexOf(n)>=0;
+ return '<div class="fig'+(g?' gone':'')+'">'+fig(n,{mood:g?"sad":"smile",s:40})+'<div class="nm">'+n+'</div><div style="font-size:10px;color:#8a857a">'+FR[n].role+'</div></div>'}).join("")+'</div>'}
+
+async function run(){
+ for(i=0;i<NODES.length;i++){var n=NODES[i];
+  add('<div class="yr">— '+n.year+' —</div>');
+  if(n.type==="open"){
+   add('<div class="box">'+photo()+'<div class="small">國小同學合照。背後是總統府。</div></div>');
+   var b=add('<div class="box post"><div class="who">'+fig("阿芳",{head:1,s:28})+'<div class="acct">阿芳</div></div><p style="margin:4px 0">老顏去少子女化對策辦公室上班了！以後我們生小孩靠你啦～</p></div>');
+   await comments(b,[["家豪","恭喜顏座🎉",1],["宜君","記得幫幼教老師講話喔",1]]);
+   await wait(500);
+   add('<div class="box post"><div class="who">'+fig("老顏",{head:1,s:28,mood:"flat"})+'<div class="acct">老顏</div></div><p style="margin:4px 0">第一天上班。主管說：我們的工作，是讓大家願意生。</p></div>');
+   await btn("開始");continue;
+  }
+  newsCard(n);await wait(600);
+  if(n.type==="inter"){var bb=add('<div class="box post"><div class="who">'+fig("詩涵",{head:1,s:28})+'<div class="acct">詩涵 分享了新聞</div></div></div>');await comments(bb,n.cm);await btn("下一年");continue}
+  if(n.type==="final"){await finale();return}
+  var k=await choice(n),opt=n[k];path.push({year:n.year,label:opt.label,history:!!opt.history});
+  opt.hurt.forEach(function(h){hurt[h]++});
+  await wait(500);await post(opt);await btn("下一年");
+ }
+}
+async function finale(){
+ await wait(400);
+ add('<div class="box post"><div class="who">'+fig("老顏",{head:1,s:28,mood:"flat"})+'<div class="acct">少子女化對策辦公室 <span>・老顏 代發</span></div></div><div class="adimg">18 歲的約定</div><div class="src">當年真的說法<span class="real">真</span>　總統府新聞 2026-05-28</div></div>');
+ await btn("同學會");
+ var gone=CAST.filter(function(n){return hurt[n]>=2});
+ add('<div class="yr">— 2026・同學會 —</div>');
+ var same=path.filter(function(p){return p.history}).length;
+ add('<div class="box end"><h2>又站到總統府前了</h2>'+photo(gone)+
+  '<div class="small">'+(gone.length?gone.join("、")+' 沒來。被你放掉兩次以上的人，不想再站在這裡拍照。':'大家都來了。')+'<br>你有 '+same+'／'+path.length+' 次跟現實的政府選得一樣。</div></div>');
+ var b=add('<div class="box post"><div class="who">'+fig("阿芳",{head:1,s:28})+'<div class="acct">阿芳</div></div><p style="margin:4px 0">八年了，本班只多了幾個小朋友。不過老顏，你都是我們的好同學。</p></div>');
+ await wait(900);
+ var c=add('<div class="box"><div class="q">那你自己呢？</div><div class="opts"><div class="opt">生</div><div class="opt">不生</div></div></div>');
+ c.querySelectorAll(".opt").forEach(function(o){o.onclick=function(){o.classList.add("chosen");c.querySelectorAll(".opt").forEach(function(x){if(x!==o)x.classList.add("dim");x.onclick=null});
+  add('<div class="small" style="margin:18px 0">'+(o.textContent==="生"?"你按下了「生」。津貼一個月 5,000，保母兩萬。":"你按下了「不生」。跟本班大部分人一樣。")+'<br><br>（POC 到此結束）</div>');
+  nx.textContent="再玩一次";nx.hidden=false;nx.onclick=function(){location.reload()}}});
+}
+window.__S=function(){return {hurt:hurt,path:path}};
+run();
+</script></body></html>
